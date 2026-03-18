@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Projects | Yuvraj Singh</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="style1.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    #bg {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background:
+        radial-gradient(circle at 10% 20%, rgba(139, 92, 246, 0.1), transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(6, 182, 212, 0.1), transparent 40%),
+        radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+      background-size: 100% 100%, 100% 100%, 40px 40px;
+    }
+
+    .project-tag {
+      font-size: 0.75rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 999px;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      color: var(--secondary);
+      font-weight: 600;
+      margin-right: 0.5rem;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="bg"></div>
+  <div class="blob-container">
+    <div class="blob"></div>
+    <div class="blob secondary"></div>
+  </div>
+
+  <!-- TOP NAVBAR (Apple Dock Style) -->
+  <nav class="NavBar">
+    <ul>
+      <li>
+        <a href="pport.html">
+          <i data-lucide="home"></i>
+          <span class="label">Home</span>
+        </a>
+      </li>
+      <li>
+        <a href="pport.html#skills-section">
+          <i data-lucide="zap"></i>
+          <span class="label">Skills</span>
+        </a>
+      </li>
+      <li>
+        <a href="achievements.html">
+          <i data-lucide="award"></i>
+          <span class="label">Achievements</span>
+        </a>
+      </li>
+      <li>
+        <a href="projects.html" class="active">
+          <i data-lucide="briefcase"></i>
+          <span class="label">Projects</span>
+        </a>
+      </li>
+      <li>
+        <a href="contact.html">
+          <i data-lucide="mail"></i>
+          <span class="label">Contact</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <main class="container section-padding fade-in-up">
+    <header class="text-center mb-16">
+      <h1 class="hero-text text-gradient">Featured Projects</h1>
+      <p class="text-muted max-w-xl mx-auto">A collection of technical solutions built with passion and precision.</p>
+    </header>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <!-- Project 1 -->
+      <div class="card-premium fade-in-up">
+        <h3 class="text-xl font-bold mb-2">AI Traffic Control System</h3>
+        <p class="text-accent text-sm mb-4">AWS (Rekognition, Lambda, S3, API Gateway), Serverless, React • Jul 2025</p>
+        <ul class="text-muted text-sm space-y-2 list-disc pl-4" style="text-align: left;">
+          <li>Architected an automated labeling system using AWS Rekognition and AWS Lambda, replacing manual
+            classification with 95% accurate AI-based object detection.</li>
+          <li>Automated the backend pipeline using AWS Lambda, S3, and API Gateway, ensuring secure uploads,
+            event-driven processing, and accurate response delivery using YOLO.</li>
+          <li>Deployed and optimized a responsive frontend with Streamlit, showcasing scalable, cloud-native
+            architecture and automation skills.</li>
+        </ul>
+      </div>
+
+      <!-- Project 2 -->
+      <div class="card-premium fade-in-up" style="animation-delay: 0.1s;">
+        <h3 class="text-xl font-bold mb-2">Railway Queue Management</h3>
+        <p class="text-accent text-sm mb-4">Java, DSA, File Handling • Mar 2025</p>
+        <ul class="text-muted text-sm space-y-2 list-disc pl-4" style="text-align: left;">
+          <li>Developed using IntelliJ IDEA to manage passenger waiting lists efficiently using Queue (FIFO) data
+            structures.</li>
+          <li>Implemented File Handling systems to save and retrieve passenger and seat details, ensuring data
+            persistence across sessions.</li>
+          <li>Optimized seating allocation algorithms to minimize wait times and maximize carriage occupancy.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- PROJECT 3 -->
+    <article class="card-premium">
+      <div class="card-title">AI Prediction Engine</div>
+      <div class="flex mb-4">
+        <span class="project-tag">Python</span>
+        <span class="project-tag">ML</span>
+      </div>
+      <p class="card-desc mb-6">
+        Advanced predictive modeling system for financial data analysis using deep learning and custom neural
+        architectures.
+      </p>
+      <a href="#" class="btn-premium" style="padding: 0.5rem 1.25rem; font-size: 0.85rem;">Documentation</a>
+    </article>
+
+    </div>
+  </main>
+</body>
+
+</html>

@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Yuvraj Singh | Portfolio</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="style1.css">
+
+  <!-- Tailwind & Config -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Spline Viewer -->
+  <script type="module" src="https://unpkg.com/@splinetool/viewer@1.9.5/build/spline-viewer.js"></script>
+  <!-- Lenis Smooth Scroll -->
+  <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          animation: {
+            aurora: "aurora 60s linear infinite",
+          },
+          keyframes: {
+            aurora: {
+              from: {
+                backgroundPosition: "50% 50%, 50% 50%",
+              },
+              to: {
+                backgroundPosition: "350% 50%, 350% 50%",
+              },
+            },
+          },
+        },
+      },
+    }
+  </script>
+
+  <!-- Aurora CSS Variables -->
+  <style>
+    :root {
+      --transparent: rgba(255, 255, 255, 0);
+      --black: #000;
+      --white: #fff;
+      --blue-500: #3b82f6;
+      --indigo-300: #a5b4fc;
+      --blue-300: #93c5fd;
+      --violet-200: #ddd6fe;
+      --blue-400: #60a5fa;
+    }
+    
+    /* Ensure body stays theme-compliant while tailwind resets */
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: 'Inter', sans-serif;
+    }
+  </style>
+
+  <style>
+    /* Page specific overrides or local styles */
+
+    .baymax {
+      width: 140px;
+      height: 180px;
+      background: white;
+      border-radius: 70px;
+      position: relative;
+      margin: 0 auto;
+      box-shadow: 0 0 50px rgba(255, 255, 255, 0.2);
+      transition: var(--transition-smooth);
+    }
+
+    .baymax:hover {
+      box-shadow: 0 0 70px var(--primary-glow);
+    }
+    
+    /* APPLE DOCK STYLES */
+    .dock-item {
+      transition: width 0.15s cubic-bezier(0.25, 1, 0.5, 1), height 0.15s cubic-bezier(0.25, 1, 0.5, 1);
+      will-change: width, height;
+      position: relative;
+    }
+    .dock-label {
+      transform: translateX(-50%) translateY(15px) scale(0.9);
+      pointer-events: none;
+    }
+    .dock-item:hover .dock-label {
+      transform: translateX(-50%) translateY(0px) scale(1);
+    }
+    .dock-item svg {
+      width: 50%;
+      height: 50%;
+      transition: all 0.2s ease;
+    }
+
+    .eye {
+      width: 12px;
+      height: 12px;
+      background: #000;
+      border-radius: 50%;
+      position: absolute;
+      top: 55px;
+    }
+
+    .eye.left {
+      left: 45px;
+    }
+
+    .eye.right {
+      right: 45px;
+    }
+
+    .eye-line {
+      width: 40px;
+      height: 3px;
+      background: #000;
+      position: absolute;
+      top: 60px;
+      left: 50px;
+    }
+
+    .chat-bubble {
+      margin-top: 2rem;
+      padding: 1.5rem;
+      border-radius: 20px;
+      max-width: 500px;
+      font-size: 1.1rem;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+
+<body>
+  <!-- AURORA BACKGROUND -->
+  <div class="aurora-container">
+    <div class="aurora-gradient"></div>
+  </div>
+
+  <!-- ============================================================
+       NEON FLOW BACKGROUND — Three.js AdditiveBlending tubes
+       Canvas sits at z-index:0, aurora at z-index:-5 shows through
+  ============================================================ -->
+  <canvas id="neon-canvas" style="
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+  "></canvas>
+
+  <script>
+  (function() {
+    /* Load Three.js r148 from CDN, then boot the Dotted Surface animation */
+    var s = document.createElement('script');
+    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r148/three.min.js';
+    s.onload = function() { bootDottedSurface(); };
+    s.onerror = function() { console.warn('Three.js failed to load'); };
+    document.head.appendChild(s);
+
+    function bootDottedSurface() {
+      var canvas = document.getElementById('neon-canvas');
+      var W = window.innerWidth, H = window.innerHeight;
+
+      const SEPARATION = 150;
+      const AMOUNTX = 40;
+      const AMOUNTY = 60;
+
+      const scene = new THREE.Scene();
+      // Added fog matching the prompt's perspective depth
+      scene.fog = new THREE.Fog(0x8b5cf6, 1000, 3000); // Tinted slightly purple for the current theme
+
+      const camera = new THREE.PerspectiveCamera(60, W/H, 1, 10000);
+      camera.position.set(0, 355, 1220);
+
+      const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+      renderer.setPixelRatio(window.devicePixelRatio);
+      renderer.setSize(W, H);
+      renderer.setClearColor(scene.fog.color, 0); // Keep transparent so the underlying Aurora shows
+
+      const positions = [];
+      const colors = [];
+
+      for (let ix = 0; ix < AMOUNTX; ix++) {
+        for (let iy = 0; iy < AMOUNTY; iy++) {
+          const x = ix * SEPARATION - (AMOUNTX * SEPARATION) / 2;
+          const z = iy * SEPARATION - (AMOUNTY * SEPARATION) / 2;
+          positions.push(x, 0, z);
+
+          // Mapped colors: normalized lighter dots for a dark theme background
+          colors.push(0.78, 0.78, 0.78);
+        }
+      }
+
+      const geometry = new THREE.BufferGeometry();
+      geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+      geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+
+      const material = new THREE.PointsMaterial({
+        size: 8,
+        vertexColors: true,
+        transparent: true,
+        opacity: 0.8,
+        sizeAttenuation: true,
+      });
+
+      const points = new THREE.Points(geometry, material);
+      scene.add(points);
+
+      let count = 0;
+      function animate() {
+        requestAnimationFrame(animate);
+
+        const positionAttribute = geometry.attributes.position;
+        const pts = positionAttribute.array;
+
+        let i = 0;
+        for (let ix = 0; ix < AMOUNTX; ix++) {
+          for (let iy = 0; iy < AMOUNTY; iy++) {
+            const index = i * 3;
+            // The sine wave mathematical formula requested in the prompt
+            pts[index + 1] = Math.sin((ix + count) * 0.3) * 50 + Math.sin((iy + count) * 0.5) * 50;
+            i++;
+          }
+        }
+
+        positionAttribute.needsUpdate = true;
+        renderer.render(scene, camera);
+        count += 0.05; // speed matching
+      }
+      animate();
+
+      /* ── Resize ───────────────────────────────────────────────── */
+      window.addEventListener('resize', function(){
+        W = window.innerWidth; H = window.innerHeight;
+        renderer.setSize(W, H);
+        camera.aspect = W/H;
+        camera.updateProjectionMatrix();
+      });
+    }
+  })();
+  </script>
+
+  <div class="blob-container">
+    <div class="blob"></div>
+    <div class="blob secondary"></div>
+  </div>
+
+  <!-- TOP NAVBAR (Apple Dock Style) -->
+  <nav class="NavBar">
+    <ul>
+      <li>
+        <a href="pport.html" class="active">
+          <i data-lucide="home"></i>
+          <span class="label">Home</span>
+        </a>
+      </li>
+      <li>
+        <a href="#skills-section">
+          <i data-lucide="zap"></i>
+          <span class="label">Skills</span>
+        </a>
+      </li>
+      <li>
+        <a href="#achievements-section">
+          <i data-lucide="award"></i>
+          <span class="label">Achievements</span>
+        </a>
+      </li>
+      <li>
+        <a href="projects.html">
+          <i data-lucide="briefcase"></i>
+          <span class="label">Projects</span>
+        </a>
+      </li>
+      <li>
+        <a href="contact.html">
+          <i data-lucide="mail"></i>
+          <span class="label">Contact</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main class="container">
+
+    <!-- HERO SECTION -->
+    <section class="section-padding fade-in-up"
+      style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 4rem; align-items: center; min-height: 80vh;">
+      <div class="hero-content" style="position: relative; z-index: 10;">
+        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-6 scroll-reveal is-visible" style="background: rgba(139,92,246,0.1); border: 1px solid rgba(139,92,246,0.25); width: max-content;">
+          <span style="background: var(--primary); width:8px; height:8px; border-radius:50%; box-shadow: 0 0 10px var(--primary); animation: badgePulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;"></span>
+          <span class="text-gradient font-bold tracking-widest uppercase" style="font-size: 0.75rem;">Available for Projects</span>
+        </div>
+        
+        <h1 class="hero-text" style="font-size: 4.5rem; line-height: 1.1;">
+          <span class="split-reveal-word" style="transition-delay: 0.1s;">Building</span> 
+          <span class="split-reveal-word" style="transition-delay: 0.2s;">the</span> <br>
+          <span class="split-reveal-word text-gradient" style="transition-delay: 0.3s;">Future</span> 
+          <span class="split-reveal-word" style="transition-delay: 0.4s;">of</span> 
+          <span class="split-reveal-word" style="transition-delay: 0.5s;">the</span> 
+          <span class="split-reveal-word" style="transition-delay: 0.6s;">Web</span>
+        </h1>
+        
+        <p class="text-muted mb-10 scroll-reveal is-visible" style="font-size: 1.25rem; max-width: 540px; transition-delay: 0.8s;">
+          Hi, I'm <span class="text-gradient" style="font-weight: 800;">Yuvraj Singh</span>. Specialized in crafting
+          high-performance, visually stunning, and scalable digital experiences.
+        </p>
+        
+        <div class="flex gap-6 scroll-reveal is-visible" style="transition-delay: 1s;">
+          <a href="projects.html" class="btn-premium">View My Work</a>
+          <a href="contact.html" class="btn-premium">Contact Me</a>
+        </div>
+      </div>
+
+      <!-- FREELANCER PROFILE CARD -->
+      <div style="display:flex; justify-content:center; align-items:center; animation: profileFloat 6s ease-in-out infinite alternate; animation-delay: 0.8s; will-change: transform;">
+        <div class="profile-card" id="hero-profile-card">
+
+          <!-- Banner -->
+          <div class="profile-banner">
+            <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=900&auto=format&fit=crop&q=80"
+                 alt="Banner" style="width:100%;height:100%;object-fit:cover;">
+            <!-- Bookmark btn -->
+            <button class="profile-bookmark" onclick="this.classList.toggle('saved')" title="Bookmark">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></svg>
+            </button>
+          </div>
+
+          <!-- Avatar (overlaps banner) -->
+          <div class="profile-avatar-wrap">
+            <img src="assets/user_photo_new.jpeg" alt="Yuvraj Singh" class="profile-avatar"
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+            <div class="profile-avatar-fallback" style="display:none;">YS</div>
+          </div>
+
+          <!-- Card Content -->
+          <div class="profile-body">
+
+            <!-- Name + Title + Tools -->
+            <div class="profile-header-row profile-anim" style="animation-delay:0.3s;">
+              <div>
+                <h2 class="profile-name">Yuvraj Singh</h2>
+                <p class="profile-title">Full-Stack &amp; Cloud Engineer | AI/ML Data Science Engineer</p>
+              </div>
+              <div class="profile-tools-wrap">
+                <div class="profile-tools">
+                  <div class="profile-tool" title="AWS">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                  </div>
+                  <div class="profile-tool" title="Cloud">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>
+                  </div>
+                  <div class="profile-tool" title="Code">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                  </div>
+                </div>
+                <span class="profile-tools-label">Tools</span>
+              </div>
+            </div>
+
+            <!-- Stats Bar -->
+            <div class="profile-stats profile-anim" style="animation-delay:0.45s;">
+              <div class="profile-stat">
+                <div class="profile-stat-val">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" stroke-width="1"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  4.9
+                </div>
+                <span class="profile-stat-label">Rating</span>
+              </div>
+              <div class="profile-divider"></div>
+              <div class="profile-stat">
+                <div class="profile-stat-val">Open</div>
+                <span class="profile-stat-label">Availability</span>
+              </div>
+              <div class="profile-divider"></div>
+              <div class="profile-stat">
+                <div class="profile-stat-val">$35/hr</div>
+                <span class="profile-stat-label">Rate</span>
+              </div>
+            </div>
+
+            <!-- Get In Touch Button -->
+            <div class="profile-anim" style="animation-delay:0.6s;">
+              <a href="contact.html" class="profile-cta">Get in touch →</a>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <style>
+      /* ── Profile Card ─────────────────────────────── */
+      .profile-card {
+        position: relative;
+        width: 340px;
+        border-radius: 24px;
+        background: rgba(255,255,255,0.85);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(139,92,246,0.18);
+        box-shadow: 0 24px 60px rgba(139,92,246,0.12), 0 4px 20px rgba(0,0,0,0.06);
+        overflow: visible;
+        animation: cardFadeIn 0.6s cubic-bezier(0.23,1,0.32,1) both;
+        transition: transform 0.3s cubic-bezier(0.23,1,0.32,1), box-shadow 0.3s ease;
+      }
+      .profile-card:hover {
+        transform: scale(1.03) translateY(-4px);
+        box-shadow: 0 36px 80px rgba(139,92,246,0.18), 0 8px 30px rgba(0,0,0,0.08);
+      }
+      @keyframes cardFadeIn {
+        from { opacity:0; transform: translateY(24px); }
+        to   { opacity:1; transform: translateY(0); }
+      }
+
+      /* Banner */
+      .profile-banner {
+        height: 128px;
+        border-radius: 24px 24px 0 0;
+        overflow: hidden;
+        position: relative;
+      }
+
+      /* Bookmark button */
+      .profile-bookmark {
+        position: absolute;
+        top: 12px; right: 12px;
+        width: 34px; height: 34px;
+        border-radius: 10px;
+        background: rgba(255,255,255,0.6);
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(255,255,255,0.4);
+        display: flex; align-items: center; justify-content: center;
+        cursor: pointer; transition: background 0.2s, color 0.2s;
+        color: #64748b;
+      }
+      .profile-bookmark:hover, .profile-bookmark.saved {
+        background: rgba(139,92,246,0.2);
+        color: var(--primary);
+      }
+
+      /* Avatar ring */
+      .profile-avatar-wrap {
+        position: absolute;
+        left: 50%; top: 128px;
+        transform: translate(-50%, -50%);
+        width: 84px; height: 84px;
+        border-radius: 50%;
+        border: 4px solid white;
+        box-shadow: 0 0 0 2px rgba(139,92,246,0.25);
+        overflow: hidden;
+        background: #e2e8f0;
+        z-index: 10;
+      }
+      .profile-avatar {
+        width: 100%; height: 100%;
+        object-fit: cover; object-position: top;
+      }
+      .profile-avatar-fallback {
+        width: 100%; height: 100%;
+        align-items: center; justify-content: center;
+        font-weight: 800; font-size: 1.4rem;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: white;
+      }
+
+      /* Body */
+      .profile-body {
+        padding: 52px 24px 24px;
+        display: flex; flex-direction: column; gap: 16px;
+      }
+
+      /* Staggered animations */
+      .profile-anim {
+        opacity: 0;
+        animation: profileItemIn 0.4s ease-out forwards;
+      }
+      @keyframes profileItemIn {
+        from { opacity:0; transform: translateY(10px); }
+        to   { opacity:1; transform: translateY(0); }
+      }
+
+      /* Header row */
+      .profile-header-row {
+        display: flex; align-items: flex-start; justify-content: space-between;
+      }
+      .profile-name {
+        font-size: 1.2rem; font-weight: 800; color: var(--text-main); margin: 0 0 2px;
+      }
+      .profile-title {
+        font-size: 0.82rem; color: var(--text-muted); margin: 0;
+      }
+      .profile-tools-wrap {
+        display: flex; flex-direction: column; align-items: flex-end; gap: 4px;
+      }
+      .profile-tools { display: flex; gap: 6px; }
+      .profile-tool {
+        width: 30px; height: 30px;
+        border-radius: 8px;
+        background: rgba(139,92,246,0.08);
+        border: 1px solid rgba(139,92,246,0.15);
+        display: flex; align-items: center; justify-content: center;
+        color: var(--primary);
+        transition: background 0.2s;
+      }
+      .profile-tool:hover { background: rgba(139,92,246,0.18); }
+      .profile-tools-label {
+        font-size: 0.68rem; color: var(--text-muted); font-weight: 600; letter-spacing: 0.05em;
+      }
+
+      /* Stats bar */
+      .profile-stats {
+        display: flex; align-items: center; justify-content: space-around;
+        border-radius: 14px;
+        background: rgba(248,250,252,0.7);
+        border: 1px solid rgba(139,92,246,0.12);
+        padding: 14px 12px;
+      }
+      .profile-stat {
+        flex: 1; display: flex; flex-direction: column;
+        align-items: center; gap: 2px;
+      }
+      .profile-stat-val {
+        display: flex; align-items: center; gap: 4px;
+        font-size: 0.95rem; font-weight: 800; color: var(--text-main);
+      }
+      .profile-stat-label {
+        font-size: 0.68rem; color: var(--text-muted);
+        text-transform: capitalize; font-weight: 600;
+      }
+      .profile-divider {
+        width: 1px; height: 38px;
+        background: rgba(139,92,246,0.15);
+      }
+
+      /* CTA button */
+      .profile-cta {
+        display: block; width: 100%;
+        padding: 0.75rem;
+        text-align: center;
+        border-radius: 14px;
+        background: linear-gradient(135deg, var(--primary), #7c3aed);
+        color: white;
+        font-weight: 700; font-size: 0.95rem;
+        text-decoration: none;
+        box-shadow: 0 4px 16px var(--primary-glow);
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
+      .profile-cta:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px var(--primary-glow);
+      }
+    </style>
+
+
+    <!-- SYSTEM CORE TELEMETRY SECTION -->
+    <section class="section-padding" style="position: relative; min-height: 550px; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; margin: 1rem 0;">
+      <!-- TELEMETRY SYSTEM -->
+      <div class="telemetry-row fade-in-up" style="display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 800px; padding: 2rem;">
+        
+        <div style="font-size: 0.9rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--primary); margin-bottom: 2.5rem; font-weight: 800; text-shadow: 0 0 15px rgba(139,92,246,0.6);">
+          System Core Active
+        </div>
+        
+        <div class="core-orbit-container" style="transform: scale(1.15);">
+          <!-- Center Node -->
+          <div class="orbit-center">
+            <div class="orbit-center-core">AI</div>
+          </div>
+          
+          <!-- Inner Ring -->
+          <div class="orbit-ring ring-1">
+            <div class="orbit-node n-1" title="Cloud Computing"><i data-lucide="cloud"></i></div>
+            <div class="orbit-node n-2" title="Data Science"><i data-lucide="database"></i></div>
+          </div>
+          
+          <!-- Outer Ring -->
+          <div class="orbit-ring ring-2">
+            <div class="orbit-node n-3" title="Full-Stack Web"><i data-lucide="layout-template"></i></div>
+            <div class="orbit-node n-4" title="Serverless Architecture"><i data-lucide="zap"></i></div>
+            <div class="orbit-node n-5" title="Machine Learning"><i data-lucide="brain-circuit"></i></div>
+          </div>
+        </div>
+        
+        <p class="text-muted text-center" style="margin-top: 5rem; max-width: 500px; line-height: 1.6; font-size: 1.1rem;">
+          Continuously processing neural vectors, mapping cloud architecture, and refining data persistence pipelines across full-stack applications.
+        </p>
+
+        <div class="flex gap-4 mt-8">
+          <a href="#highlights-section" id="initiate-scan-btn" class="btn-primary" style="padding: 0.6rem 1.5rem; border-radius: 99px; background: rgba(139,92,246,0.1); border: 1px solid var(--primary); color: var(--primary); transition: all 0.2s; display: flex; align-items: center; gap: 8px;">
+             Initiate Scan
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- HIGHLIGHTS BENTO GRID (Achievements & Projects) -->
+    <section id="highlights-section" class="section-padding">
+      <div class="text-center mb-16 fade-in-up">
+        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-5"
+          style="background: rgba(139,92,246,0.1); border: 1px solid rgba(139,92,246,0.25); color: var(--primary); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em;">
+          ✦ Featured Work
+        </div>
+        <h2 class="hero-text text-gradient">Highlights &amp; Milestones</h2>
+        <p class="text-muted max-w-xl mx-auto" style="margin-top: 1rem;">A curated Bento collection of my most significant technical achievements and featured projects.</p>
+      </div>
+
+      <div class="bento-grid fade-in-up">
+
+        <!-- AI Traffic (Col 2, Row 2) - HERO CARD -->
+        <article class="bento-card col-span-2 row-span-2" style="border: 1px solid rgba(139,92,246,0.2);">
+          <div class="bento-bg">
+            <img src="https://images.unsplash.com/photo-1545147480-7f2142ede5e3?q=80&w=1200&auto=format&fit=crop" alt="AI Traffic">
+          </div>
+          <!-- Gradient overlay -->
+          <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(139,92,246,0.15),rgba(6,182,212,0.1));z-index:1;pointer-events:none;"></div>
+          <div class="bento-content" style="background: linear-gradient(to top, rgba(255,255,255,0.98) 60%, rgba(255,255,255,0.3));">
+            <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.75rem;">
+              <span style="font-size:1.8rem;">🚦</span>
+              <span style="font-size:0.7rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;padding:0.25rem 0.75rem;border-radius:99px;background:rgba(139,92,246,0.12);color:var(--primary);border:1px solid rgba(139,92,246,0.25);">Featured Project</span>
+            </div>
+            <h3 class="bento-name" style="font-size:1.5rem;">AI Traffic Control System</h3>
+            <p class="bento-desc" style="margin-bottom:1rem;">Architected a <strong>95% accurate</strong> vehicle-detection pipeline using AWS Rekognition + YOLO, replacing manual traffic management with fully serverless automation.</p>
+            <div style="display:flex;flex-wrap:wrap;gap:0.5rem;margin-bottom:1.25rem;">
+              <span class="project-tag">AWS Rekognition</span>
+              <span class="project-tag">Python</span>
+              <span class="project-tag">YOLO v8</span>
+              <span class="project-tag">Serverless</span>
+              <span class="project-tag">Lambda</span>
+            </div>
+            <a href="achievements.html" style="display:inline-flex;align-items:center;gap:0.5rem;font-size:0.85rem;font-weight:700;color:var(--primary);text-decoration:none;transition:gap 0.2s;">View Details →</a>
+          </div>
+        </article>
+
+        <!-- Railway Queue (Col 1, Row 1) -->
+        <article class="bento-card" style="border:1px solid rgba(6,182,212,0.2);">
+          <div class="bento-bg">
+            <img src="https://images.unsplash.com/photo-1474487022136-231a4773c82e?q=80&w=800&auto=format&fit=crop" alt="Railway">
+          </div>
+          <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(6,182,212,0.12),transparent);z-index:1;pointer-events:none;"></div>
+          <div class="bento-content">
+            <div class="bento-icon" style="font-size:1.6rem;">🚆</div>
+            <h3 class="bento-name">Railway Queue System</h3>
+            <p class="bento-desc">Full data-persistent passenger queue management in Java with FIFO structures & zero-loss design.</p>
+            <div style="margin-top:0.75rem;"><span class="project-tag" style="color:var(--secondary);">Java</span><span class="project-tag" style="color:var(--secondary);">DSA</span></div>
+          </div>
+        </article>
+
+        <!-- AWS Cert (Col 1, Row 1) -->
+        <article class="bento-card" style="border:1px solid rgba(244,63,94,0.2);">
+          <div class="bento-bg">
+            <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=800&auto=format&fit=crop" alt="AWS Cloud">
+          </div>
+          <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(244,63,94,0.1),transparent);z-index:1;pointer-events:none;"></div>
+          <div class="bento-content">
+            <div class="bento-icon" style="font-size:1.6rem;">☁️</div>
+            <h3 class="bento-name">AWS Architect Certified</h3>
+            <p class="bento-desc">SAA-C03 Certified — cloud-native architecture, IAM, VPC, Lambda & serverless patterns.</p>
+            <div style="margin-top:0.75rem;"><span class="project-tag" style="color:var(--accent);">SAA-C03</span><span class="project-tag" style="color:var(--accent);">Cloud</span></div>
+          </div>
+        </article>
+
+        <!-- Innovation Award (Col 1, Row 1) -->
+        <article class="bento-card" style="border:1px solid rgba(139,92,246,0.2);">
+          <div class="bento-bg">
+            <img src="https://images.unsplash.com/photo-1567427017947-545c5f8d16ad?q=80&w=800&auto=format&fit=crop" alt="Award">
+          </div>
+          <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(139,92,246,0.12),transparent);z-index:1;pointer-events:none;"></div>
+          <div class="bento-content">
+            <div class="bento-icon" style="font-size:1.6rem;">🥇</div>
+            <h3 class="bento-name">Best Innovation Award</h3>
+            <p class="bento-desc">University Tech Fest — awarded for AI-powered queue system design, beating 40+ teams.</p>
+            <div style="margin-top:0.75rem;"><span class="project-tag">1st Place</span><span class="project-tag">Tech Fest</span></div>
+          </div>
+        </article>
+
+        <!-- Academic (Col 1, Row 1) -->
+        <article class="bento-card" style="border:1px solid rgba(16,185,129,0.2);">
+          <div class="bento-bg">
+            <img src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=800&auto=format&fit=crop" alt="Academic">
+          </div>
+          <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(16,185,129,0.1),transparent);z-index:1;pointer-events:none;"></div>
+          <div class="bento-content">
+            <div class="bento-icon" style="font-size:1.6rem;">🎓</div>
+            <h3 class="bento-name">Computer Science</h3>
+            <p class="bento-desc">Deep learning, real-world system design and modern software engineering practices.</p>
+            <div style="margin-top:0.75rem;"><span class="project-tag" style="color:#10b981;">B.Tech</span><span class="project-tag" style="color:#10b981;">AI/ML</span></div>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- STATS & BAYMAX SECTION -->
+    <section id="achievements-section" class="section-padding" style="padding-top: 0;">
+
+      <!-- ANIMATED STATS BAR -->
+      <div class="stats-bar fade-in-up" style="position:relative;overflow:hidden;border-radius:32px;">
+        <!-- subtle shimmer bg -->
+        <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(139,92,246,0.05),rgba(6,182,212,0.05));pointer-events:none;"></div>
+        <div class="stat-item">
+          <div class="stat-number" data-target="6">0</div>
+          <div class="stat-label">Certifications</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" data-target="3">0</div>
+          <div class="stat-label">Awards Won</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" data-target="8">0</div>
+          <div class="stat-label">Projects Shipped</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" data-target="95">0</div>
+          <div class="stat-label">AI Accuracy %</div>
+        </div>
+      </div>
+
+      <!-- KEY MILESTONES TIMELINE -->
+      <div style="max-width:800px;margin:5rem auto 0;" class="fade-in-up">
+        <h3 style="text-align:center;font-size:2rem;font-weight:800;margin-bottom:3rem;">Key <span class="text-gradient">Milestones</span></h3>
+        <div class="timeline">
+
+          <div class="timeline-item">
+            <div class="timeline-date">2024 — Present</div>
+            <div class="timeline-title">AI Traffic Control System @ O7 Services</div>
+            <p class="timeline-desc">Built an AWS-native serverless pipeline achieving 95% vehicle detection accuracy using Rekognition & YOLO. Eliminated manual traffic management end-to-end.</p>
+            <div style="margin-top:0.6rem;display:flex;flex-wrap:wrap;gap:0.4rem;">
+              <span class="project-tag">AWS Lambda</span><span class="project-tag">YOLO v8</span><span class="project-tag">Python</span>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-date">2024</div>
+            <div class="timeline-title">AWS Solutions Architect — Associate (SAA-C03)</div>
+            <p class="timeline-desc">Passed the SAA-C03 exam with hands-on expertise in cloud architecture, VPC design, IAM, S3, EC2, Lambda, and serverless application patterns.</p>
+            <div style="margin-top:0.6rem;"><span class="project-tag" style="color:var(--accent);">Certification</span></div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-date">2023</div>
+            <div class="timeline-title">🥇 Best Innovation — University Tech Fest</div>
+            <p class="timeline-desc">Awarded first place out of 40+ competing teams for building an AI-powered railway queue management system with data persistence and zero data loss.</p>
+            <div style="margin-top:0.6rem;"><span class="project-tag" style="color:var(--primary);">Award</span></div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-date">2022 — 2026</div>
+            <div class="timeline-title">B.Tech in Computer Science</div>
+            <p class="timeline-desc">Specialized in AI/ML, cloud computing, and full-stack development. Delivered real-world system design projects across every semester with measurable outcomes.</p>
+            <div style="margin-top:0.6rem;"><span class="project-tag" style="color:#10b981;">Academic</span></div>
+          </div>
+
+        </div>
+      </div>
+
+
+    </section>
+
+    <!-- SKILLS 3D ICON CLOUD SECTION -->
+    <section id="skills-section" class="section-padding text-center" style="position:relative;overflow:hidden;">
+      <!-- radial bg accent -->
+      <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:600px;background:radial-gradient(circle,rgba(139,92,246,0.06) 0%,transparent 70%);pointer-events:none;z-index:0;"></div>
+
+      <div style="position:relative;z-index:1;">
+        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-5"
+          style="background: rgba(139,92,246,0.1); border: 1px solid rgba(139,92,246,0.25); color: var(--primary); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; display:inline-flex;">
+          ⚡ Tech Stack
+        </div>
+        <h3 class="mb-4" style="font-size: 2.5rem; font-weight: 800;">Technical <span class="text-gradient">Arsenal</span></h3>
+        <p class="text-muted mb-12" style="max-width: 600px; margin-left: auto; margin-right: auto; font-size: 1.1rem;">
+          An interactive, physics-based 3D cloud mapping my proficiency across modern frameworks, tools, and languages.
+        </p>
+
+        <div class="relative mx-auto flex max-w-lg items-center justify-center p-4">
+          <canvas id="icon-cloud-canvas" width="450" height="450" style="width: 100%; max-width: 450px;"></canvas>
+        </div>
+      </div>
+
+      <!-- Hidden list of images for the TagCanvas -->
+      <div id="icon-list" style="display: none;">
+        <ul>
+          <li><a title="TypeScript: Strongly typed superset of JS for highly scalable apps" href="#"><img src="https://cdn.simpleicons.org/typescript" width="35" height="35" alt="TypeScript" /></a></li>
+          <li><a title="JavaScript: Core programming language powering the dynamic web" href="#"><img src="https://cdn.simpleicons.org/javascript" width="35" height="35" alt="JavaScript" /></a></li>
+          <li><a title="Dart: Client-optimized language for fast apps on any platform" href="#"><img src="https://cdn.simpleicons.org/dart" width="35" height="35" alt="Dart" /></a></li>
+          <li><a title="Java: Robust object-oriented programming for enterprise backends" href="#"><img src="https://cdn.simpleicons.org/java" width="35" height="35" alt="Java" /></a></li>
+          <li><a title="React: Leading JavaScript library for building interactive UIs" href="#"><img src="https://cdn.simpleicons.org/react" width="35" height="35" alt="React" /></a></li>
+          <li><a title="Flutter: Google's UI toolkit for natively compiled multi-platform apps" href="#"><img src="https://cdn.simpleicons.org/flutter" width="35" height="35" alt="Flutter" /></a></li>
+          <li><a title="Android: Open-source operating system for mobile applications" href="#"><img src="https://cdn.simpleicons.org/android" width="35" height="35" alt="Android" /></a></li>
+          <li><a title="HTML5: Modern markup language for structuring web content" href="#"><img src="https://cdn.simpleicons.org/html5" width="35" height="35" alt="HTML5" /></a></li>
+          <li><a title="CSS3: Advanced style sheet language for responsive presentation" href="#"><img src="https://cdn.simpleicons.org/css3" width="35" height="35" alt="CSS3" /></a></li>
+          <li><a title="Node.js: High-performance JavaScript runtime built on Chrome's V8" href="#"><img src="https://cdn.simpleicons.org/nodedotjs" width="35" height="35" alt="Node.js" /></a></li>
+          <li><a title="Express: Fast, unopinionated web framework for Node.js" href="#"><img src="https://cdn.simpleicons.org/express" width="35" height="35" alt="Express" /></a></li>
+          <li><a title="Next.js: The React Framework for production-grade server rendering" href="#"><img src="https://cdn.simpleicons.org/nextdotjs" width="35" height="35" alt="Next.js" /></a></li>
+          <li><a title="Prisma: Next-generation ORM wrapper for Node.js and TypeScript" href="#"><img src="https://cdn.simpleicons.org/prisma" width="35" height="35" alt="Prisma" /></a></li>
+          <li><a title="AWS: The world's most comprehensive and broadly adopted cloud" href="#"><img src="https://cdn.simpleicons.org/amazonaws" width="35" height="35" alt="AWS" /></a></li>
+          <li><a title="PostgreSQL: Highly advanced open-source relational database system" href="#"><img src="https://cdn.simpleicons.org/postgresql" width="35" height="35" alt="PostgreSQL" /></a></li>
+          <li><a title="Firebase: Google's platform for fast backend app development" href="#"><img src="https://cdn.simpleicons.org/firebase" width="35" height="35" alt="Firebase" /></a></li>
+          <li><a title="NGINX: High-performance HTTP server, reverse proxy, and load balancer" href="#"><img src="https://cdn.simpleicons.org/nginx" width="35" height="35" alt="NGINX" /></a></li>
+          <li><a title="Vercel: Premium cloud platform for lightning fast frontend deployment" href="#"><img src="https://cdn.simpleicons.org/vercel" width="35" height="35" alt="Vercel" /></a></li>
+          <li><a title="Docker: OS-level virtualization to deliver software in secure containers" href="#"><img src="https://cdn.simpleicons.org/docker" width="35" height="35" alt="Docker" /></a></li>
+          <li><a title="Git: Open source distributed version control system for tracking changes" href="#"><img src="https://cdn.simpleicons.org/git" width="35" height="35" alt="Git" /></a></li>
+          <li><a title="GitHub: The ultimate developer platform to build, scale, and deliver" href="#"><img src="https://cdn.simpleicons.org/github" width="35" height="35" alt="GitHub" /></a></li>
+          <li><a title="GitLab: Comprehensive DevOps platform delivered as a single application" href="#"><img src="https://cdn.simpleicons.org/gitlab" width="35" height="35" alt="GitLab" /></a></li>
+          <li><a title="VS Code: Streamlined code editor optimized for building modern apps" href="#"><img src="https://cdn.simpleicons.org/visualstudiocode" width="35" height="35" alt="VS Code" /></a></li>
+          <li><a title="Android Studio: Official Integrated Development Environment for Android" href="#"><img src="https://cdn.simpleicons.org/androidstudio" width="35" height="35" alt="Android Studio" /></a></li>
+          <li><a title="Figma: Collaborative web application for high-end UI/UX interface design" href="#"><img src="https://cdn.simpleicons.org/figma" width="35" height="35" alt="Figma" /></a></li>
+        </ul>
+      </div>
+    </section>
+
+  
+    <!-- ==================== MY STORY & MOTTO ==================== -->
+    <section id="story-section" class="section-padding text-center fade-in-up" style="position:relative; min-height: 60vh; display:flex; flex-direction:column; justify-content:center; align-items:center;">
+      <div class="glass" style="padding: 4rem 3rem; border-radius: 2.5rem; position: relative; max-width: 850px; z-index: 10;">
+        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6"
+          style="background: rgba(139,92,246,0.1); border: 1px solid rgba(139,92,246,0.25); color: var(--primary); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em;">
+          📖 My Story
+        </div>
+        
+        <h2 class="text-gradient mb-8" style="font-size: 3rem; font-weight: 800; line-height: 1.1; letter-spacing: -0.02em;">From Concepts to Reality</h2>
+        
+        <p class="text-muted leading-relaxed mb-8" style="font-size: 1.15rem; text-align: left;">
+          My journey started with a deep fascination for algorithms and how they can elegantly solve real-world problems. Today, as a Full-Stack &amp; Cloud Engineer specializing in AI/ML, I thrive at the cross-section of intelligent data science and modern web engineering. Whether it's architecting a highly-accurate AI traffic detection pipeline via AWS Serverless, or crafting a hyper-fluid, buttery-smooth user interface, my pursuit of technical excellence is driven by a single purpose:
+        </p>
+
+        <div style="padding: 2.5rem 2rem; background: linear-gradient(135deg, rgba(139,92,246,0.08), rgba(6,182,212,0.05)); border-radius: 20px; border: 1px dashed rgba(139,92,246,0.3); position: relative; overflow: hidden;">
+          <div style="position:absolute; top:-20px; left:-20px; font-size: 8rem; color: rgba(139,92,246,0.1); line-height: 1; pointer-events:none;">"</div>
+          <p class="font-bold italic text-slate-800 leading-tight" style="font-size: 1.6rem; position: relative; z-index: 2;">
+            "Engineering the future by bridging the gap between complex intelligence and beautiful, seamless human experiences."
+          </p>
+        </div>
+      </div>
+      
+      <!-- Subtle background glow -->
+      <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:800px; height:800px; background:radial-gradient(circle,rgba(6,182,212,0.04) 0%,transparent 70%); pointer-events:none; z-index:0;"></div>
+    </section>
+
+    <!-- CV VIEW MODAL -->
+    <div id="cv-modal" class="fixed inset-0 z-[9999] flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300" style="background: rgba(3,0,18,0.85); backdrop-filter: blur(15px);">
+      <div class="glass p-10 rounded-[2rem] relative shadow-2xl border-indigo-500/30 transform scale-95 transition-transform duration-300 flex flex-col items-center text-center" id="cv-modal-content" style="max-width: 480px; width: 90%;">
+        
+        <!-- Close Button -->
+        <button id="close-cv-modal" class="absolute top-6 right-6 text-slate-400 hover:text-white transition-colors cursor-pointer">
+          <i data-lucide="x" class="w-6 h-6"></i>
+        </button>
+
+        <!-- Icon -->
+        <div class="inline-flex items-center justify-center w-20 h-20 rounded-full mb-6" style="background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3); color: #10b981; box-shadow: 0 0 20px rgba(16,185,129,0.2);">
+          <i data-lucide="check-circle-2" class="w-10 h-10"></i>
+        </div>
+
+        <h3 class="text-2xl font-bold text-white mb-3">Scan Complete</h3>
+        <p class="text-slate-300 mb-8" style="line-height: 1.6;">
+          Subject profile successfully acquired. You can now securely view or download Yuvraj's professional Curriculum Vitae.
+        </p>
+
+        <div class="flex gap-4 w-full">
+          <a href="Yuvraj_Singh_CV.pdf" target="_blank" class="btn-primary flex-1 flex items-center justify-center gap-2" style="padding: 0.8rem; border-radius: 99px; box-shadow: 0 4px 15px rgba(139,92,246,0.3);">
+            <i data-lucide="eye" class="w-4 h-4"></i> View CV
+          </a>
+          <a href="Yuvraj_Singh_CV.pdf" download="Yuvraj_Singh_CV.pdf" class="flex-1 flex items-center justify-center gap-2" style="padding: 0.8rem; border-radius: 99px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='rgba(255,255,255,0.05)'">
+            <i data-lucide="download" class="w-4 h-4"></i> Download
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- SCRIPTS -->
+  <!-- TagCanvas & Lucide Icons -->
+  <script src="https://www.goat1000.com/tagcanvas.min.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <script>
+    const nav = document.querySelector('.NavBar');
+
+    // Scroll Background and Nav effect safely
+    window.addEventListener('scroll', () => {
+      const y = window.scrollY;
+      if (nav) {
+        if (y > 50) {
+          nav.classList.add('scrolled');
+        } else {
+          nav.classList.remove('scrolled');
+        }
+      }
+    });
+
+    // Initialize the Apple Dock Magnification
+    const initDock = () => {
+      const navBar = document.querySelector('.NavBar');
+      const dockItems = document.querySelectorAll('.NavBar a');
+      
+      const BASE_SIZE = 44; 
+      const MAX_SIZE = 70;
+      const DISTANCE_THRESHOLD = 150;
+
+      if (navBar) {
+        window.addEventListener('mousemove', (e) => {
+          const navRect = navBar.getBoundingClientRect();
+          // Only trigger if mouse is near the navbar
+          if (e.clientY > navRect.top - 100 && e.clientY < navRect.bottom + 100) {
+            dockItems.forEach((item) => {
+              const rect = item.getBoundingClientRect();
+              const itemCenterX = rect.left + rect.width / 2;
+              const distance = Math.abs(e.clientX - itemCenterX);
+
+              if (distance < DISTANCE_THRESHOLD) {
+                const scale = 1 - (distance / DISTANCE_THRESHOLD);
+                const ease = Math.sin(scale * Math.PI / 2); 
+                newWidth = BASE_SIZE + (MAX_SIZE - BASE_SIZE) * ease;
+              }
+              item.style.width = `${newWidth}px`;
+              item.style.height = `${newWidth}px`;
+            });
+          } else {
+            resetDock();
+          }
+        });
+
+        const resetDock = () => {
+          dockItems.forEach((item) => {
+            item.style.width = `${BASE_SIZE}px`;
+            item.style.height = `${BASE_SIZE}px`;
+          });
+        };
+
+        navBar.addEventListener('mouseleave', resetDock);
+      }
+    };
+
+    /* ── Achievements logic ── */
+    const initAchievements = () => {
+      // 1. Animated stat counters
+      function animateCount(el, target, duration = 1600) {
+        let start = null;
+        const step = (ts) => {
+          if (!start) start = ts;
+          const prog = Math.min((ts - start) / duration, 1);
+          const ease = 1 - Math.pow(1 - prog, 3);
+          el.textContent = Math.round(ease * target);
+          if (prog < 1) requestAnimationFrame(step);
+          else el.textContent = target;
+        };
+        requestAnimationFrame(step);
+      }
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            const target = parseInt(e.target.dataset.target, 10);
+            animateCount(e.target, target);
+            observer.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.4 });
+
+      document.querySelectorAll('.stat-number').forEach(el => observer.observe(el));
+
+      // 2. Category filter tabs
+      const tabs = document.querySelectorAll('.tab-btn');
+      const cards = document.querySelectorAll('.achievement-card');
+
+      tabs.forEach(btn => {
+        btn.addEventListener('click', () => {
+          tabs.forEach(t => t.classList.remove('active'));
+          btn.classList.add('active');
+          const filter = btn.dataset.filter;
+          cards.forEach(card => {
+            if (filter === 'all' || card.dataset.category === filter) {
+              card.classList.remove('hidden');
+            } else {
+              card.classList.add('hidden');
+            }
+          });
+        });
+      });
+    };
+
+    // Initialize Pages Scripts
+    window.onload = function() {
+      // 1. Load Icons
+      lucide.createIcons();
+      
+      // Split Reveal Trigger
+      setTimeout(() => {
+        document.querySelectorAll('.split-reveal-word').forEach(el => el.classList.add('revealed'));
+      }, 100);
+    
+      // 2. Initialize Dock Animations
+      initDock();
+
+      // 3. Initialize Achievements
+      initAchievements();
+
+      // 4. Initialize 3D Interactive Icon Cloud
+      try {
+        TagCanvas.Start('icon-cloud-canvas', 'icon-list', {
+          textColour: '#8b5cf6',
+          outlineColour: 'transparent',
+          reverse: true,
+          depth: 0.8,
+          maxSpeed: 0.05,
+          minSpeed: 0.01,
+          initial: [0.1, -0.1],
+          wheelZoom: false,
+          imageScale: 1.5,
+          fadeIn: 1000,
+          clickToFront: 600,
+          lock: 'none',
+          imagePosition: 'top',
+          tooltip: 'div',
+          tooltipClass: 'advanced-tooltip',
+          tooltipDelay: 0
+        });
+      } catch(e) {
+        console.error('Canvas icon cloud failed to load:', e);
+      }
+
+      // 6. Scroll Reveal Observer
+      initScrollReveal();
+
+      // 7. Smooth High-End Interactions (Cursor, Magnetic, Progress)
+      initSmoothInteractions();
+    };
+
+    const initSmoothInteractions = () => {
+      // -- Scroll Progress Bar --
+      const progressBar = document.createElement('div');
+      progressBar.className = 'scroll-progress';
+      document.body.appendChild(progressBar);
+      
+      window.addEventListener('scroll', () => {
+        const scrollPx = document.documentElement.scrollTop;
+        const winHeightPx = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        progressBar.style.width = `${(scrollPx / winHeightPx) * 100}%`;
+      }, { passive: true });
+
+      // -- Magnetic Buttons --
+      document.querySelectorAll('.btn-premium').forEach(btn => {
+        btn.addEventListener('mousemove', (e) => {
+          const rect = btn.getBoundingClientRect();
+          const centerX = rect.left + rect.width / 2;
+          const centerY = rect.top + rect.height / 2;
+          // Spring interpolation
+          const deltaX = (e.clientX - centerX) * 0.4;
+          const deltaY = (e.clientY - centerY) * 0.4;
+          btn.style.transform = `translate(${deltaX}px, ${deltaY}px) scale(1.05)`;
+        });
+        btn.addEventListener('mouseleave', () => {
+          btn.style.transform = '';
+        });
+      });
+
+      // -- Custom Spring Cursor --
+      if (window.matchMedia("(pointer: fine)").matches) {
+        const dot = document.createElement('div'); dot.className = 'cursor-dot';
+        const ring = document.createElement('div'); ring.className = 'cursor-ring';
+        document.body.appendChild(dot);
+        document.body.appendChild(ring);
+        
+        let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
+        let dotX = mouseX, dotY = mouseY;
+        let ringX = mouseX, ringY = mouseY;
+        
+        window.addEventListener('mousemove', (e) => {
+          mouseX = e.clientX; 
+          mouseY = e.clientY;
+        });
+        
+        const renderCursor = () => {
+          // Instant tracking for dot
+          dotX += (mouseX - dotX) * 0.8;
+          dotY += (mouseY - dotY) * 0.8;
+          // Lagged spring for ring
+          ringX += (mouseX - ringX) * 0.15;
+          ringY += (mouseY - ringY) * 0.15;
+          
+          dot.style.transform = `translate(${dotX}px, ${dotY}px) translate(-50%, -50%)`;
+          ring.style.transform = `translate(${ringX}px, ${ringY}px) translate(-50%, -50%)`;
+          requestAnimationFrame(renderCursor);
+        };
+        renderCursor();
+
+        // Enlarge ring on hoverable items
+        document.querySelectorAll('a, button, .bento-card, .achievement-card').forEach(el => {
+          el.addEventListener('mouseenter', () => {
+            ring.style.width = '50px';
+            ring.style.height = '50px';
+            ring.style.background = 'rgba(139, 92, 246, 0.1)';
+          });
+          el.addEventListener('mouseleave', () => {
+            ring.style.width = '32px';
+            ring.style.height = '32px';
+            ring.style.background = 'transparent';
+          });
+        });
+      }
+    };
+
+    const initScrollReveal = () => {
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+          }
+        });
+      }, observerOptions);
+
+      // Select all main components
+      const targets = document.querySelectorAll(
+        'section, .hero-content, .bento-card, .profile-card, .achievement-card, .timeline-item, .telemetry-row'
+      );
+
+      targets.forEach(el => {
+        el.classList.add('scroll-reveal');
+        
+        // Add stagger delay for grid items
+        if (el.classList.contains('bento-card') || el.classList.contains('achievement-card') || el.classList.contains('timeline-item')) {
+          const parent = el.parentElement;
+          const children = Array.from(parent.children);
+          const index = children.indexOf(el);
+          el.style.setProperty('--delay', index);
+          el.classList.add('stagger-item');
+        }
+        
+        observer.observe(el);
+      });
+    };
+
+    // Initialize Premium Lenis Full-Page Smooth Scroller
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Apple-style easing
+      direction: 'vertical',
+      gestureDirection: 'vertical',
+      smooth: true,
+      mouseMultiplier: 1,
+      smoothTouch: false,
+      touchMultiplier: 2,
+    });
+
+    function raf(time) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+
+    // -- Initiate Scan Button Logic --
+    const scanBtn = document.getElementById('initiate-scan-btn');
+    if (scanBtn) {
+      scanBtn.addEventListener('click', (e) => {
+        e.preventDefault(); // Prevent standard anchor jump
+        
+        // Visual Feedback (Pulse and loading)
+        scanBtn.innerHTML = '<svg class="animate-spin" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Scanning Data...';
+        scanBtn.style.background = 'rgba(139,92,246,0.6)';
+        scanBtn.style.color = '#fff';
+        scanBtn.style.boxShadow = '0 0 25px rgba(139,92,246,0.6)';
+        
+        // Overclock Orbit Speeds!
+        document.querySelectorAll('.orbit-ring.ring-1, .orbit-ring.ring-1 .orbit-node').forEach(el => el.style.animationDuration = '3s');
+        document.querySelectorAll('.orbit-ring.ring-2, .orbit-ring.ring-2 .orbit-node').forEach(el => el.style.animationDuration = '4s');
+        
+        // Wait for 1.2s to build suspense, then pop up CV modal!
+        setTimeout(() => {
+          const cvModal = document.getElementById('cv-modal');
+          const cvModalContent = document.getElementById('cv-modal-content');
+          
+          if (cvModal && cvModalContent) {
+            // Render any new lucide icons that were injected in the modal
+            lucide.createIcons();
+            
+            // Show modal
+            cvModal.classList.remove('opacity-0', 'pointer-events-none');
+            cvModalContent.classList.remove('scale-95');
+            cvModalContent.classList.add('scale-100');
+          }
+          
+          // Reset button in the background
+          setTimeout(() => {
+            scanBtn.innerHTML = 'Initiate Scan';
+            scanBtn.style.background = 'rgba(139,92,246,0.1)';
+            scanBtn.style.color = 'var(--primary)';
+            scanBtn.style.boxShadow = 'none';
+            document.querySelectorAll('.orbit-ring.ring-1, .orbit-ring.ring-1 .orbit-node').forEach(el => el.style.animationDuration = '18s');
+            document.querySelectorAll('.orbit-ring.ring-2, .orbit-ring.ring-2 .orbit-node').forEach(el => el.style.animationDuration = '28s');
+          }, 600);
+          
+        }, 1200);
+      });
+      
+      // Close CV Modal Logic
+      const closeCvModalBtn = document.getElementById('close-cv-modal');
+      const cvModal = document.getElementById('cv-modal');
+      const cvModalContent = document.getElementById('cv-modal-content');
+      
+      if (closeCvModalBtn && cvModal) {
+        closeCvModalBtn.addEventListener('click', () => {
+          cvModal.classList.add('opacity-0', 'pointer-events-none');
+          cvModalContent.classList.remove('scale-100');
+          cvModalContent.classList.add('scale-95');
+        });
+      }
+    }
+  </script>
+</body>
+
+</html>
