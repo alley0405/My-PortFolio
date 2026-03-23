@@ -14,6 +14,8 @@
   <!-- Custom Styles -->
   <link rel="stylesheet" href="style1.css">
   <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Lenis Smooth Scroll -->
+  <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
 
   <style>
     #bg {
@@ -51,13 +53,13 @@
   <nav class="NavBar">
     <ul>
       <li>
-        <a href="pport.html">
+        <a href="index.html">
           <i data-lucide="home"></i>
           <span class="label">Home</span>
         </a>
       </li>
       <li>
-        <a href="pport.html#skills-section">
+        <a href="index.html#skills-section">
           <i data-lucide="zap"></i>
           <span class="label">Skills</span>
         </a>
@@ -89,7 +91,7 @@
       <p class="text-muted max-w-xl mx-auto">A collection of technical solutions built with passion and precision.</p>
     </header>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
       <!-- Project 1 -->
       <div class="card-premium fade-in-up">
         <h3 class="text-xl font-bold mb-2">AI Traffic Control System</h3>
@@ -116,24 +118,119 @@
           <li>Optimized seating allocation algorithms to minimize wait times and maximize carriage occupancy.</li>
         </ul>
       </div>
-    </div>
 
-    <!-- PROJECT 3 -->
-    <article class="card-premium">
-      <div class="card-title">AI Prediction Engine</div>
-      <div class="flex mb-4">
-        <span class="project-tag">Python</span>
-        <span class="project-tag">ML</span>
+      <!-- Project 3 -->
+      <div class="card-premium fade-in-up" style="animation-delay: 0.2s;">
+        <h3 class="text-xl font-bold mb-2">AI Prediction Engine</h3>
+        <div class="flex mb-4 gap-2">
+          <span class="project-tag">Python</span>
+          <span class="project-tag">ML</span>
+        </div>
+        <p class="text-muted text-sm mb-6">
+          Advanced predictive modeling system for financial data analysis using deep learning and custom neural
+          architectures.
+        </p>
+        <a href="#" class="btn-premium" style="padding: 0.5rem 1.25rem; font-size: 0.85rem; display: inline-block;">Documentation</a>
       </div>
-      <p class="card-desc mb-6">
-        Advanced predictive modeling system for financial data analysis using deep learning and custom neural
-        architectures.
-      </p>
-      <a href="#" class="btn-premium" style="padding: 0.5rem 1.25rem; font-size: 0.85rem;">Documentation</a>
-    </article>
-
     </div>
   </main>
-</body>
+  <script>
+    // Initialize Lucide icons
+    lucide.createIcons();
 
+    // -- Custom Spring Cursor --
+    if (window.matchMedia("(pointer: fine)").matches) {
+      const dot = document.createElement('div'); dot.className = 'cursor-dot';
+      const ring = document.createElement('div'); ring.className = 'cursor-ring';
+      document.body.appendChild(dot);
+      document.body.appendChild(ring);
+      
+      let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
+      let dotX = mouseX, dotY = mouseY;
+      let ringX = mouseX, ringY = mouseY;
+      
+      window.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX; 
+        mouseY = e.clientY;
+      });
+      
+      const renderCursor = () => {
+        dotX += (mouseX - dotX) * 0.8;
+        dotY += (mouseY - dotY) * 0.8;
+        ringX += (mouseX - ringX) * 0.15;
+        ringY += (mouseY - ringY) * 0.15;
+        
+        dot.style.transform = `translate(${dotX}px, ${dotY}px) translate(-50%, -50%)`;
+        ring.style.transform = `translate(${ringX}px, ${ringY}px) translate(-50%, -50%)`;
+        requestAnimationFrame(renderCursor);
+      };
+      renderCursor();
+
+      document.querySelectorAll('a, button, .card-premium').forEach(el => {
+        el.addEventListener('mouseenter', () => {
+          ring.style.width = '50px';
+          ring.style.height = '50px';
+          ring.style.background = 'rgba(139, 92, 246, 0.1)';
+        });
+        el.addEventListener('mouseleave', () => {
+          ring.style.width = '32px';
+          ring.style.height = '32px';
+          ring.style.background = 'transparent';
+        });
+      });
+    }
+
+    // -- Navbar Scroll Effect --
+    const nav = document.querySelector('.NavBar');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 50) nav.classList.add('scrolled');
+      else nav.classList.remove('scrolled');
+    });
+
+    // -- Navbar Dock Magnification --
+    const initDock = () => {
+      const dockItems = document.querySelectorAll('.NavBar a');
+      const BASE_SIZE = 44; 
+      const MAX_SIZE = 70;
+      const DISTANCE_THRESHOLD = 150;
+
+      if (nav) {
+        window.addEventListener('mousemove', (e) => {
+          const navRect = nav.getBoundingClientRect();
+          if (e.clientY > navRect.top - 100 && e.clientY < navRect.bottom + 100) {
+            dockItems.forEach((item) => {
+              const rect = item.getBoundingClientRect();
+              const itemCenterX = rect.left + rect.width / 2;
+              const distance = Math.abs(e.clientX - itemCenterX);
+              let newWidth = BASE_SIZE;
+              if (distance < DISTANCE_THRESHOLD) {
+                const scale = 1 - (distance / DISTANCE_THRESHOLD);
+                newWidth = BASE_SIZE + (MAX_SIZE - BASE_SIZE) * Math.sin(scale * Math.PI / 2);
+              }
+              item.style.width = `${newWidth}px`;
+              item.style.height = `${newWidth}px`;
+            });
+          } else {
+            dockItems.forEach(i => { i.style.width = `${BASE_SIZE}px`; i.style.height = `${BASE_SIZE}px`; });
+          }
+        });
+      }
+    };
+    initDock();
+
+    // Initialize Premium Lenis Full-Page Smooth Scroller
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), 
+      smooth: true,
+      mouseMultiplier: 1,
+    });
+
+    function raf(time) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+  </script>
+</body>
 </html>

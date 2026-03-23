@@ -13,10 +13,11 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 
-    <!-- Shared Styles -->
+    <!-- Custom Styles -->
     <link rel="stylesheet" href="style1.css">
-    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Lenis Smooth Scroll -->
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
 
     <style>
         /* ── Background ── */
@@ -446,13 +447,13 @@
     <nav class="NavBar" id="navbar">
         <ul>
             <li>
-                <a href="pport.html">
+                <a href="index.html">
                     <i data-lucide="home"></i>
                     <span class="label">Home</span>
                 </a>
             </li>
             <li>
-                <a href="pport.html#skills-section">
+                <a href="index.html#skills-section">
                     <i data-lucide="zap"></i>
                     <span class="label">Skills</span>
                 </a>
@@ -533,11 +534,11 @@
         <article class="achievement-card" data-category="cert">
             <div class="card-icon">☁️</div>
             <span class="card-badge badge-cert">Certification</span>
-            <div class="card-title-text">internship in ISO approved IT company.</div>
-            <div class="card-org">O7 services</div>
-            <div class="card-year">2023-2024</div>
-            <div class="card-body">Demonstrated expertise in designing distributed system on cloud, streamlit, flask,
-                python, and cloud-native architecture patterns.</div>
+            <div class="card-title-text">Internship at ISO-approved IT Company</div>
+            <div class="card-org">O7 Services</div>
+            <div class="card-year">2023 - 2024</div>
+            <div class="card-body">Demonstrated expertise in designing distributed systems on Cloud, Streamlit, Flask,
+                Python, and cloud-native architecture patterns.</div>
         </article>
 
         <!-- AI Traffic System -->
@@ -587,11 +588,11 @@
         <article class="achievement-card" data-category="academic">
             <div class="card-icon">🎓</div>
             <span class="card-badge badge-academic">Academic</span>
-            <div class="card-title-text">Computer Science</div>
-            <div class="card-org">ISO approved institution</div>
+            <div class="card-title-text">Computer Science Degree</div>
+            <div class="card-org">ISO-Approved Institution</div>
             <div class="card-year">2023 – 2025</div>
-            <div class="card-body">Gained expericence in model training by handling real life projects
-                with Deep learning models in an ISO approved institution.</div>
+            <div class="card-body">Gained experience in model training by handling real-world projects
+                with Deep Learning models at an ISO-approved institution.</div>
         </article>
 
         <!-- Web Dev Certification -->
@@ -670,7 +671,7 @@
         <script>
             // Initialize Lucide icons
             lucide.createIcons();
-            
+
             /* ── Star generator ── */
             const starsEl = document.getElementById('stars');
             for (let i = 0; i < 120; i++) {
@@ -749,8 +750,93 @@
                 baymax.style.transform = 'scale(1.15) rotate(-5deg)';
                 setTimeout(() => baymax.style.transform = '', 350);
             });
+
+            // -- Custom Spring Cursor --
+            if (window.matchMedia("(pointer: fine)").matches) {
+              const dot = document.createElement('div'); dot.className = 'cursor-dot';
+              const ring = document.createElement('div'); ring.className = 'cursor-ring';
+              document.body.appendChild(dot);
+              document.body.appendChild(ring);
+              
+              let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
+              let dotX = mouseX, dotY = mouseY;
+              let ringX = mouseX, ringY = mouseY;
+              
+              window.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX; 
+                mouseY = e.clientY;
+              });
+              
+              const renderCursor = () => {
+                dotX += (mouseX - dotX) * 0.8;
+                dotY += (mouseY - dotY) * 0.8;
+                ringX += (mouseX - ringX) * 0.15;
+                ringY += (mouseY - ringY) * 0.15;
+                
+                dot.style.transform = `translate(${dotX}px, ${dotY}px) translate(-50%, -50%)`;
+                ring.style.transform = `translate(${ringX}px, ${ringY}px) translate(-50%, -50%)`;
+                requestAnimationFrame(renderCursor);
+              };
+              renderCursor();
+
+              document.querySelectorAll('a, button, .achievement-card').forEach(el => {
+                el.addEventListener('mouseenter', () => {
+                  ring.style.width = '50px';
+                  ring.style.height = '50px';
+                  ring.style.background = 'rgba(139, 92, 246, 0.1)';
+                });
+                el.addEventListener('mouseleave', () => {
+                  ring.style.width = '32px';
+                  ring.style.height = '32px';
+                  ring.style.background = 'transparent';
+                });
+              });
+            }
+
+            // -- Navbar Dock Magnification --
+            const initDock = () => {
+              const dockItems = document.querySelectorAll('.NavBar a');
+              const BASE_SIZE = 44; 
+              const MAX_SIZE = 70;
+              const DISTANCE_THRESHOLD = 150;
+
+              if (nav) {
+                window.addEventListener('mousemove', (e) => {
+                  const navRect = nav.getBoundingClientRect();
+                  if (e.clientY > navRect.top - 100 && e.clientY < navRect.bottom + 100) {
+                    dockItems.forEach((item) => {
+                      const rect = item.getBoundingClientRect();
+                      const itemCenterX = rect.left + rect.width / 2;
+                      const distance = Math.abs(e.clientX - itemCenterX);
+                      let newWidth = BASE_SIZE;
+                      if (distance < DISTANCE_THRESHOLD) {
+                        const scale = 1 - (distance / DISTANCE_THRESHOLD);
+                        newWidth = BASE_SIZE + (MAX_SIZE - BASE_SIZE) * Math.sin(scale * Math.PI / 2);
+                      }
+                      item.style.width = `${newWidth}px`;
+                      item.style.height = `${newWidth}px`;
+                    });
+                  } else {
+                    dockItems.forEach(i => { i.style.width = `${BASE_SIZE}px`; i.style.height = `${BASE_SIZE}px`; });
+                  }
+                });
+              }
+            };
+            initDock();
+
+            // Initialize Premium Lenis Full-Page Smooth Scroller
+            const lenis = new Lenis({
+                duration: 1.2,
+                easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), 
+                smooth: true,
+                mouseMultiplier: 1,
+            });
+
+            function raf(time) {
+                lenis.raf(time);
+                requestAnimationFrame(raf);
+            }
+            requestAnimationFrame(raf);
         </script>
 </body>
-</html>
-
 </html>

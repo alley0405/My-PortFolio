@@ -14,6 +14,8 @@
   <!-- Custom Styles -->
   <link rel="stylesheet" href="style1.css">
   <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Lenis Smooth Scroll -->
+  <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
 
   <style>
     /* Page specific overrides or local styles */
@@ -81,13 +83,13 @@
   <nav class="NavBar">
     <ul>
       <li>
-        <a href="pport.html">
+        <a href="index.html">
           <i data-lucide="home"></i>
           <span class="label">Home</span>
         </a>
       </li>
       <li>
-        <a href="pport.html#skills-section">
+        <a href="index.html#skills-section">
           <i data-lucide="zap"></i>
           <span class="label">Skills</span>
         </a>
@@ -182,17 +184,58 @@
     // Initialize Lucide icons
     lucide.createIcons();
 
-    // Navbar dock effect
+    // -- Custom Spring Cursor --
+    if (window.matchMedia("(pointer: fine)").matches) {
+      const dot = document.createElement('div'); dot.className = 'cursor-dot';
+      const ring = document.createElement('div'); ring.className = 'cursor-ring';
+      document.body.appendChild(dot);
+      document.body.appendChild(ring);
+      
+      let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
+      let dotX = mouseX, dotY = mouseY;
+      let ringX = mouseX, ringY = mouseY;
+      
+      window.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX; 
+        mouseY = e.clientY;
+      });
+      
+      const renderCursor = () => {
+        dotX += (mouseX - dotX) * 0.8;
+        dotY += (mouseY - dotY) * 0.8;
+        ringX += (mouseX - ringX) * 0.15;
+        ringY += (mouseY - ringY) * 0.15;
+        
+        dot.style.transform = `translate(${dotX}px, ${dotY}px) translate(-50%, -50%)`;
+        ring.style.transform = `translate(${ringX}px, ${ringY}px) translate(-50%, -50%)`;
+        requestAnimationFrame(renderCursor);
+      };
+      renderCursor();
+
+      document.querySelectorAll('a, button, input, textarea, .form-container').forEach(el => {
+        el.addEventListener('mouseenter', () => {
+          ring.style.width = '50px';
+          ring.style.height = '50px';
+          ring.style.background = 'rgba(139, 92, 246, 0.1)';
+        });
+        el.addEventListener('mouseleave', () => {
+          ring.style.width = '32px';
+          ring.style.height = '32px';
+          ring.style.background = 'transparent';
+        });
+      });
+    }
+
+    // -- Navbar Dock Magnification --
     const initDock = () => {
-      const navBar = document.querySelector('.NavBar');
       const dockItems = document.querySelectorAll('.NavBar a');
       const BASE_SIZE = 44; 
-      const MAX_SIZE = 65;
+      const MAX_SIZE = 70;
       const DISTANCE_THRESHOLD = 150;
 
-      if (navBar) {
+      if (nav) {
         window.addEventListener('mousemove', (e) => {
-          const navRect = navBar.getBoundingClientRect();
+          const navRect = nav.getBoundingClientRect();
           if (e.clientY > navRect.top - 100 && e.clientY < navRect.bottom + 100) {
             dockItems.forEach((item) => {
               const rect = item.getBoundingClientRect();
@@ -210,12 +253,23 @@
             dockItems.forEach(i => { i.style.width = `${BASE_SIZE}px`; i.style.height = `${BASE_SIZE}px`; });
           }
         });
-        navBar.addEventListener('mouseleave', () => {
-          dockItems.forEach(i => { i.style.width = `${BASE_SIZE}px`; i.style.height = `${BASE_SIZE}px`; });
-        });
       }
     };
     initDock();
+
+    // Initialize Premium Lenis Full-Page Smooth Scroller
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), 
+      smooth: true,
+      mouseMultiplier: 1,
+    });
+
+    function raf(time) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
   </script>
 </body>
 </html>
