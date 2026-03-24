@@ -801,34 +801,10 @@
         </div>
       </div>
 
-      <!-- Hidden list of images for the TagCanvas -->
+      <!-- Hidden list of images for the TagCanvas (Populated via API) -->
       <div id="icon-list" style="display: none;">
-        <ul>
-          <li><a title="TypeScript: Strongly typed superset of JS for highly scalable apps" href="#"><img src="https://cdn.simpleicons.org/typescript" width="35" height="35" alt="TypeScript" /></a></li>
-          <li><a title="JavaScript: Core programming language powering the dynamic web" href="#"><img src="https://cdn.simpleicons.org/javascript" width="35" height="35" alt="JavaScript" /></a></li>
-          <li><a title="Dart: Client-optimized language for fast apps on any platform" href="#"><img src="https://cdn.simpleicons.org/dart" width="35" height="35" alt="Dart" /></a></li>
-          <li><a title="Java: Robust object-oriented programming for enterprise backends" href="#"><img src="https://cdn.simpleicons.org/java" width="35" height="35" alt="Java" /></a></li>
-          <li><a title="React: Leading JavaScript library for building interactive UIs" href="#"><img src="https://cdn.simpleicons.org/react" width="35" height="35" alt="React" /></a></li>
-          <li><a title="Flutter: Google's UI toolkit for natively compiled multi-platform apps" href="#"><img src="https://cdn.simpleicons.org/flutter" width="35" height="35" alt="Flutter" /></a></li>
-          <li><a title="Android: Open-source operating system for mobile applications" href="#"><img src="https://cdn.simpleicons.org/android" width="35" height="35" alt="Android" /></a></li>
-          <li><a title="HTML5: Modern markup language for structuring web content" href="#"><img src="https://cdn.simpleicons.org/html5" width="35" height="35" alt="HTML5" /></a></li>
-          <li><a title="CSS3: Advanced style sheet language for responsive presentation" href="#"><img src="https://cdn.simpleicons.org/css3" width="35" height="35" alt="CSS3" /></a></li>
-          <li><a title="Node.js: High-performance JavaScript runtime built on Chrome's V8" href="#"><img src="https://cdn.simpleicons.org/nodedotjs" width="35" height="35" alt="Node.js" /></a></li>
-          <li><a title="Express: Fast, unopinionated web framework for Node.js" href="#"><img src="https://cdn.simpleicons.org/express" width="35" height="35" alt="Express" /></a></li>
-          <li><a title="Next.js: The React Framework for production-grade server rendering" href="#"><img src="https://cdn.simpleicons.org/nextdotjs" width="35" height="35" alt="Next.js" /></a></li>
-          <li><a title="Prisma: Next-generation ORM wrapper for Node.js and TypeScript" href="#"><img src="https://cdn.simpleicons.org/prisma" width="35" height="35" alt="Prisma" /></a></li>
-          <li><a title="AWS: The world's most comprehensive and broadly adopted cloud" href="#"><img src="https://cdn.simpleicons.org/amazonaws" width="35" height="35" alt="AWS" /></a></li>
-          <li><a title="PostgreSQL: Highly advanced open-source relational database system" href="#"><img src="https://cdn.simpleicons.org/postgresql" width="35" height="35" alt="PostgreSQL" /></a></li>
-          <li><a title="Firebase: Google's platform for fast backend app development" href="#"><img src="https://cdn.simpleicons.org/firebase" width="35" height="35" alt="Firebase" /></a></li>
-          <li><a title="NGINX: High-performance HTTP server, reverse proxy, and load balancer" href="#"><img src="https://cdn.simpleicons.org/nginx" width="35" height="35" alt="NGINX" /></a></li>
-          <li><a title="Vercel: Premium cloud platform for lightning fast frontend deployment" href="#"><img src="https://cdn.simpleicons.org/vercel" width="35" height="35" alt="Vercel" /></a></li>
-          <li><a title="Docker: OS-level virtualization to deliver software in secure containers" href="#"><img src="https://cdn.simpleicons.org/docker" width="35" height="35" alt="Docker" /></a></li>
-          <li><a title="Git: Open source distributed version control system for tracking changes" href="#"><img src="https://cdn.simpleicons.org/git" width="35" height="35" alt="Git" /></a></li>
-          <li><a title="GitHub: The ultimate developer platform to build, scale, and deliver" href="#"><img src="https://cdn.simpleicons.org/github" width="35" height="35" alt="GitHub" /></a></li>
-          <li><a title="GitLab: Comprehensive DevOps platform delivered as a single application" href="#"><img src="https://cdn.simpleicons.org/gitlab" width="35" height="35" alt="GitLab" /></a></li>
-          <li><a title="VS Code: Streamlined code editor optimized for building modern apps" href="#"><img src="https://cdn.simpleicons.org/visualstudiocode" width="35" height="35" alt="VS Code" /></a></li>
-          <li><a title="Android Studio: Official Integrated Development Environment for Android" href="#"><img src="https://cdn.simpleicons.org/androidstudio" width="35" height="35" alt="Android Studio" /></a></li>
-          <li><a title="Figma: Collaborative web application for high-end UI/UX interface design" href="#"><img src="https://cdn.simpleicons.org/figma" width="35" height="35" alt="Figma" /></a></li>
+        <ul id="dynamic-icon-list">
+          <!-- Dynamic Skills will be injected here -->
         </ul>
       </div>
     </section>
@@ -1019,29 +995,42 @@
       // 3. Initialize Achievements
       initAchievements();
 
-      // 4. Initialize 3D Interactive Icon Cloud
-      try {
-        TagCanvas.Start('icon-cloud-canvas', 'icon-list', {
-          textColour: '#8b5cf6',
-          outlineColour: 'transparent',
-          reverse: true,
-          depth: 0.8,
-          maxSpeed: 0.05,
-          minSpeed: 0.01,
-          initial: [0.1, -0.1],
-          wheelZoom: false,
-          imageScale: 1.5,
-          fadeIn: 1000,
-          clickToFront: 600,
-          lock: 'none',
-          imagePosition: 'top',
-          tooltip: 'div',
-          tooltipClass: 'advanced-tooltip',
-          tooltipDelay: 0
-        });
-      } catch(e) {
-        console.error('Canvas icon cloud failed to load:', e);
-      }
+      // 4. Initialize 3D Interactive Icon Cloud from Database
+      const initSkillCloud = async () => {
+        const listEl = document.getElementById('dynamic-icon-list');
+        try {
+          const response = await fetch('http://localhost:8000/api/skills/');
+          const skills = await response.json();
+          
+          if (skills.length > 0) {
+            listEl.innerHTML = skills.map(s => `
+              <li><a title="${s.description}" href="#"><img src="https://cdn.simpleicons.org/${s.icon}" width="35" height="35" alt="${s.name}" /></a></li>
+            `).join('');
+            
+            TagCanvas.Start('icon-cloud-canvas', 'icon-list', {
+              textColour: '#8b5cf6',
+              outlineColour: 'transparent',
+              reverse: true,
+              depth: 0.8,
+              maxSpeed: 0.05,
+              minSpeed: 0.01,
+              initial: [0.1, -0.1],
+              wheelZoom: false,
+              imageScale: 1.5,
+              fadeIn: 1000,
+              clickToFront: 600,
+              lock: 'none',
+              imagePosition: 'top',
+              tooltip: 'div',
+              tooltipClass: 'advanced-tooltip',
+              tooltipDelay: 0
+            });
+          }
+        } catch(e) {
+          console.error('Canvas icon cloud API failed:', e);
+        }
+      };
+      initSkillCloud();
 
       // 6. Scroll Reveal Observer
       initScrollReveal();

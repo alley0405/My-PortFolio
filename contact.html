@@ -168,17 +168,51 @@
       }
     });
 
-    function submitForm(event) {
+    async function submitForm(event) {
       event.preventDefault();
-      // Simulate form submission
-      const btn = event.target.querySelector('button');
-      btn.innerText = 'Sending...';
-      btn.style.opacity = '0.7';
-      
-      setTimeout(() => {
-        event.target.style.display = 'none';
-        document.getElementById('success-message').style.display = 'block';
-      }, 1500);
+      const form = event.target;
+      const btn = form.querySelector('button');
+      const originalText = btn.innerText;
+
+      // Extract form data
+      const formData = {
+        name: form.querySelector('[name="name"]').value,
+        email: form.querySelector('[name="email"]').value,
+        date: form.querySelector('[name="date"]').value || null,
+        time: form.querySelector('[name="time"]').value || null,
+        project_details: form.querySelector('[name="project_details"]').value,
+      };
+
+      try {
+        btn.innerText = 'Sending...';
+        btn.disabled = true;
+        btn.style.opacity = '0.7';
+
+        const response = await fetch('http://localhost:8000/api/contact/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
+        });
+
+        if (response.ok) {
+          form.style.display = 'none';
+          document.getElementById('success-message').style.display = 'block';
+        } else {
+          const errors = await response.json();
+          alert('Submission failed: ' + JSON.stringify(errors));
+          btn.innerText = originalText;
+          btn.disabled = false;
+          btn.style.opacity = '1';
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred while connecting to the backend. Please ensure the server is running on localhost:8000.');
+        btn.innerText = originalText;
+        btn.disabled = false;
+        btn.style.opacity = '1';
+      }
     }
     
     // Initialize Lucide icons

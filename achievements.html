@@ -529,93 +529,80 @@
 
     <!-- ACHIEVEMENTS GRID -->
     <section class="achievements-grid" id="achievements-grid">
+        <div class="col-span-full py-20 text-center text-muted">Loading achievements from database...</div>
+    </section>
 
-        <!-- AWS Certification -->
-        <article class="achievement-card" data-category="cert">
-            <div class="card-icon">☁️</div>
-            <span class="card-badge badge-cert">Certification</span>
-            <div class="card-title-text">Internship at ISO-approved IT Company</div>
-            <div class="card-org">O7 Services</div>
-            <div class="card-year">2023 - 2024</div>
-            <div class="card-body">Demonstrated expertise in designing distributed systems on Cloud, Streamlit, Flask,
-                Python, and cloud-native architecture patterns.</div>
-        </article>
-
-        <!-- AI Traffic System -->
-        <article class="achievement-card" data-category="project">
-            <div class="card-icon">🚦</div>
-            <span class="card-badge badge-project">Project</span>
-            <div class="card-title-text">AI Traffic Control System – 95% Accuracy</div>
-            <div class="card-org">Personal / AWS Cloud</div>
-            <div class="card-year">Jul 2025</div>
-            <div class="card-body">Architected an automated vehicle-detection pipeline using AWS Rekognition + YOLO,
-                achieving 95% classification accuracy, replacing manual processes end-to-end.</div>
-        </article>
-
-        <!-- Hackathon Award -->
-        <article class="achievement-card" data-category="award">
-            <div class="card-icon">🥇</div>
-            <span class="card-badge badge-award">Award</span>
-            <div class="card-title-text">Best Innovation – College Hackathon</div>
-            <div class="card-org">University Tech Fest</div>
-            <div class="card-year">2024</div>
-            <div class="card-body">Awarded Best Innovation for designing an AI-powered smart queue management prototype
-                that reduced average wait time by 40% in a 24-hour hackathon sprint.</div>
-        </article>
-
-        <!-- Railway Project -->
-        <article class="achievement-card" data-category="project">
-            <div class="card-icon">🚆</div>
-            <span class="card-badge badge-project">Project</span>
-            <div class="card-title-text">Railway Queue Management System</div>
-            <div class="card-org">Java / DSA</div>
-            <div class="card-year">Mar 2025</div>
-            <div class="card-body">Built a full data-persistent passenger queue system using FIFO structures and file
-                handling in Java, optimizing seating allocation across carriage sessions.</div>
-        </article>
-
-        <!-- ML Certification -->
-        <article class="achievement-card" data-category="cert">
-            <div class="card-icon">🤖</div>
-            <span class="card-badge badge-cert">Certification</span>
-            <div class="card-title-text">Machine Learning Specialization</div>
-            <div class="card-org">deeplearning.ai / Coursera</div>
-            <div class="card-year">2024</div>
-            <div class="card-body">Completed AI & ML Specialization from ISO approved institution.</div>
-        </article>
-
-        <!-- Academic Excellence -->
-        <article class="achievement-card" data-category="academic">
-            <div class="card-icon">🎓</div>
-            <span class="card-badge badge-academic">Academic</span>
-            <div class="card-title-text">Computer Science Degree</div>
-            <div class="card-org">ISO-Approved Institution</div>
-            <div class="card-year">2023 – 2025</div>
-            <div class="card-body">Gained experience in model training by handling real-world projects
-                with Deep Learning models at an ISO-approved institution.</div>
-        </article>
-
-        <!-- Web Dev Certification -->
-        <article class="achievement-card" data-category="cert">
-            <div class="card-icon">🌐</div>
-            <span class="card-badge badge-cert">Certification</span>
-            <div class="card-title-text">Full-Stack Web Development</div>
-            <div class="card-org">The Odin Project / freeCodeCamp</div>
-            <div class="card-year">2023</div>
-            <div class="card-body">Completed comprehensive curriculum covering HTML, CSS, JavaScript, Node.js, Express,
-                React, and REST API design with multiple portfolio capstone projects.</div>
-        </article>
-
-        <!-- Research Paper -->
-        <article class="achievement-card" data-category="academic">
-            <div class="card-icon">📄</div>
-            <span class="card-badge badge-academic">Academic</span>
-            <div class="card-title-text">Research Paper – AI in Traffic Management</div>
-            <div class="card-org">IEEE Student Conference</div>
-            <div class="card-year">2025</div>
-            <div class="card-body">Authored and presented a research paper on AWS-driven AI traffic detection systems,
-                exploring latency optimization and real-world deployment strategies.</div>
-        </article>
+    <script>
+        // -- Fetch Achievements from Django API --
+        async function fetchAchievements() {
+          const grid = document.getElementById('achievements-grid');
+          try {
+            const response = await fetch('http://localhost:8000/api/achievements/');
+            const achievements = await response.json();
+            
+            window.allAchievements = achievements; // Store globally for filtering
+    
+            if (achievements.length > 0) {
+              renderAchievements(achievements);
+              setupFiltering();
+            } else {
+              grid.innerHTML = '<div class="col-span-full text-center py-20 text-muted">No achievements found in database.</div>';
+            }
+          } catch (error) {
+            console.error('Error fetching achievements:', error);
+            grid.innerHTML = '<div class="col-span-full text-center py-20 text-red-500">Failed to connect to database. Ensure Django server is running.</div>';
+          }
+        }
+    
+        function renderAchievements(list) {
+          const grid = document.getElementById('achievements-grid');
+          grid.innerHTML = '';
+          list.forEach((item, index) => {
+            const article = document.createElement('article');
+            article.className = 'achievement-card fade-in-up';
+            article.dataset.category = item.category;
+            article.style.animationDelay = `${index * 0.05}s`;
+            
+            const badgeClass = `badge-${item.category}`;
+            const badgeLabel = item.category === 'cert' ? 'Certification' : 
+                             item.category === 'award' ? 'Award' : 
+                             item.category === 'academic' ? 'Academic' : 'Project';
+    
+            article.innerHTML = `
+                <div class="card-icon"><i data-lucide="${item.icon}"></i></div>
+                <span class="card-badge ${badgeClass}">${badgeLabel}</span>
+                <div class="card-title-text">${item.title}</div>
+                <div class="card-org">${item.organization}</div>
+                <div class="card-year">${item.year}</div>
+                <div class="card-body">${item.description}</div>
+            `;
+            grid.appendChild(article);
+          });
+          // Re-trigger icon creation for any new icons if needed
+          if (window.lucide) lucide.createIcons();
+        }
+    
+        function setupFiltering() {
+          const tabs = document.querySelectorAll('.tab-btn');
+          tabs.forEach(btn => {
+            btn.addEventListener('click', () => {
+              tabs.forEach(t => t.classList.remove('active'));
+              btn.classList.add('active');
+              const filter = btn.dataset.filter;
+              
+              if (filter === 'all') {
+                renderAchievements(window.allAchievements);
+              } else {
+                const filtered = window.allAchievements.filter(a => a.category === filter);
+                renderAchievements(filtered);
+              }
+            });
+          });
+        }
+    
+        // Initialize once DOM is ready (or just call it here as we are at the end of body)
+        fetchAchievements();
+    </script>
 
         <!-- TIMELINE -->
         <section class="timeline-section">
