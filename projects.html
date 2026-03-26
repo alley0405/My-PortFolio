@@ -100,53 +100,86 @@
     // Initialize Lucide icons
     lucide.createIcons();
 
-    // -- Fetch Projects from Django API --
-    async function fetchProjects() {
-      const grid = document.getElementById('projects-grid');
-      try {
-        const response = await fetch('http://localhost:8000/api/projects/');
-        const projects = await response.json();
-        
-        if (projects.length > 0) {
-          grid.innerHTML = ''; // Clear loading state
-          projects.forEach((proj, index) => {
-            const card = document.createElement('div');
-            card.className = 'card-premium fade-in-up';
-            card.style.animationDelay = `${index * 0.1}s`;
-            
-            const tagsHtml = proj.tags.split(',').map(tag => `<span class="project-tag">${tag}</span>`).join('');
-            
-            // Format descriptions (bullet points if start with -)
-            const descLines = proj.description.split('\n');
-            let descHtml = '';
-            if (descLines.some(l => l.trim().startsWith('-'))) {
-               descHtml = `<ul class="text-muted text-sm space-y-2 list-disc pl-4" style="text-align: left;">
-                 ${descLines.map(line => line.trim().startsWith('-') ? `<li>${line.trim().substring(1).trim()}</li>` : `<li>${line.trim()}</li>`).join('')}
-               </ul>`;
-            } else {
-               descHtml = `<p class="text-muted text-sm mb-6">${proj.description}</p>`;
-            }
-
-            card.innerHTML = `
-              <h3 class="text-xl font-bold mb-2">${proj.title}</h3>
-              <p class="text-accent text-sm mb-4">${proj.subtitle}</p>
-              <div class="flex mb-4 gap-2">${tagsHtml}</div>
-              ${descHtml}
-              ${proj.doc_link ? `<a href="${proj.doc_link}" class="btn-premium mt-6" style="padding: 0.5rem 1.25rem; font-size: 0.85rem; display: inline-block;">Documentation</a>` : ''}
-            `;
-            grid.appendChild(card);
-          });
-          // Re-trigger icon creation for any new icons if needed
-          lucide.createIcons();
-        } else {
-          grid.innerHTML = '<div class="col-span-full text-center py-20 text-muted">No projects found in database.</div>';
-        }
-      } catch (error) {
-        console.error('Error fetching projects:', error);
-        grid.innerHTML = '<div class="col-span-full text-center py-20 text-red-500">Failed to connect to database API. Ensure Django server is running.</div>';
+    // -- Static Project Data (no backend required) --
+    const PROJECTS = [
+      {
+        title: "AI Traffic Control System",
+        subtitle: "AWS Rekognition + YOLO v8 | Serverless Architecture",
+        tags: "AWS Rekognition,Python,YOLO v8,Lambda,Serverless",
+        description: "- Architected a 95% accurate vehicle-detection pipeline using AWS Rekognition & YOLO v8\n- Replaced manual traffic management with fully serverless automation via AWS Lambda\n- Built real-time event processing with SNS/SQS for zero-latency signal switching\n- Deployed on AWS with auto-scaling to handle peak traffic volumes",
+        doc_link: ""
+      },
+      {
+        title: "Railway Queue Management System",
+        subtitle: "Java DSA | Data-Persistent FIFO Queue Engine",
+        tags: "Java,DSA,File I/O,OOP,FIFO",
+        description: "- Full data-persistent passenger queue management system in Java\n- Implemented FIFO data structures with zero-data-loss file persistence\n- Supports dynamic queue operations: enqueue, dequeue, priority lanes\n- Won Best Innovation Award at University Tech Fest 2023 (1st out of 40+ teams)",
+        doc_link: ""
+      },
+      {
+        title: "ANPR — Automatic Number Plate Recognition",
+        subtitle: "Python | EasyOCR + YOLO | FastAPI Dashboard",
+        tags: "Python,EasyOCR,YOLO,FastAPI,React",
+        description: "- Real-time license plate detection system using YOLO v8 + EasyOCR\n- Live FastAPI backend streaming webcam frames to a React dashboard\n- Identifies Indian state of origin from detected plate codes\n- Analytics dashboard with detection confidence, accuracy trends, and entry logs",
+        doc_link: ""
+      },
+      {
+        title: "Full-Stack Portfolio Website",
+        subtitle: "Django REST + Vanilla JS | Deployed on Vercel",
+        tags: "Django,JavaScript,CSS,REST API,Vercel",
+        description: "- Premium animated portfolio with Three.js dotted-surface background and Aurora gradients\n- Django REST Framework backend for dynamic skills and project management\n- TagCanvas 3D interactive skills icon cloud populated from database\n- Apple Dock-style navigation with Lenis smooth scrolling and custom spring cursor",
+        doc_link: ""
+      },
+      {
+        title: "Fee Management System",
+        subtitle: "Python | CustomTkinter + SQLite | Desktop App",
+        tags: "Python,CustomTkinter,SQLite,PDF,Desktop",
+        description: "- Complete fee management desktop application for Nursery–Grade 12\n- Secure admin & student login portals with role-based access control\n- Automated fee balance tracking with PDF receipt generation\n- Modern CustomTkinter GUI with a professional dark-themed dashboard",
+        doc_link: ""
+      },
+      {
+        title: "Cloud Architecture Projects",
+        subtitle: "AWS SAA-C03 | VPC, IAM, Lambda, S3, EC2",
+        tags: "AWS,VPC,IAM,Lambda,S3,EC2",
+        description: "- Hands-on AWS projects completed during SAA-C03 certification preparation\n- Designed multi-tier VPC architectures with public/private subnets and NAT Gateways\n- Implemented serverless patterns: API Gateway → Lambda → DynamoDB pipelines\n- Configured IAM policies, S3 bucket policies, and CloudFront distributions",
+        doc_link: ""
       }
+    ];
+
+    function renderProjects() {
+      const grid = document.getElementById('projects-grid');
+      grid.innerHTML = '';
+
+      PROJECTS.forEach((proj, index) => {
+        const card = document.createElement('div');
+        card.className = 'card-premium fade-in-up';
+        card.style.animationDelay = `${index * 0.1}s`;
+
+        const tagsHtml = proj.tags.split(',').map(tag => `<span class="project-tag">${tag.trim()}</span>`).join('');
+
+        const descLines = proj.description.split('\n').filter(l => l.trim());
+        let descHtml = '';
+        if (descLines.some(l => l.trim().startsWith('-'))) {
+          descHtml = `<ul class="text-muted text-sm space-y-2 list-disc pl-4" style="text-align: left; margin-bottom: 1.5rem;">
+            ${descLines.map(line => `<li>${line.trim().replace(/^-\s*/, '')}</li>`).join('')}
+          </ul>`;
+        } else {
+          descHtml = `<p class="text-muted text-sm mb-6">${proj.description}</p>`;
+        }
+
+        card.innerHTML = `
+          <h3 class="text-xl font-bold mb-2">${proj.title}</h3>
+          <p class="text-accent text-sm mb-4">${proj.subtitle}</p>
+          <div class="flex flex-wrap mb-4 gap-2">${tagsHtml}</div>
+          ${descHtml}
+          ${proj.doc_link ? `<a href="${proj.doc_link}" class="btn-premium mt-6" style="padding: 0.5rem 1.25rem; font-size: 0.85rem; display: inline-block;">Documentation</a>` : ''}
+        `;
+        grid.appendChild(card);
+      });
+
+      lucide.createIcons();
     }
-    fetchProjects();
+    renderProjects();
 
     // -- Custom Spring Cursor --
     if (window.matchMedia("(pointer: fine)").matches) {

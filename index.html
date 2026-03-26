@@ -995,39 +995,57 @@
       // 3. Initialize Achievements
       initAchievements();
 
-      // 4. Initialize 3D Interactive Icon Cloud from Database
-      const initSkillCloud = async () => {
+      // 4. Initialize 3D Interactive Icon Cloud (static data — no backend required)
+      const initSkillCloud = () => {
         const listEl = document.getElementById('dynamic-icon-list');
+        const skills = [
+          { name: "Python",        icon: "python",           description: "Primary language for AI/ML and backend" },
+          { name: "Django",        icon: "django",           description: "Full-stack web framework" },
+          { name: "JavaScript",    icon: "javascript",       description: "Frontend and Node.js scripting" },
+          { name: "React",         icon: "react",            description: "UI component library" },
+          { name: "HTML5",         icon: "html5",            description: "Semantic web structure" },
+          { name: "CSS3",          icon: "css3",             description: "Styling and animations" },
+          { name: "AWS",           icon: "amazonaws",        description: "Cloud infrastructure & serverless" },
+          { name: "Docker",        icon: "docker",           description: "Containerization & deployment" },
+          { name: "Git",           icon: "git",              description: "Version control" },
+          { name: "GitHub",        icon: "github",           description: "Code hosting & collaboration" },
+          { name: "PostgreSQL",    icon: "postgresql",       description: "Relational database" },
+          { name: "SQLite",        icon: "sqlite",           description: "Lightweight embedded database" },
+          { name: "Node.js",       icon: "nodedotjs",        description: "JavaScript runtime" },
+          { name: "FastAPI",       icon: "fastapi",          description: "High-performance Python API" },
+          { name: "TailwindCSS",   icon: "tailwindcss",      description: "Utility-first CSS framework" },
+          { name: "Linux",         icon: "linux",            description: "Server environment & scripting" },
+          { name: "VS Code",       icon: "visualstudiocode", description: "Primary code editor" },
+          { name: "Vercel",        icon: "vercel",           description: "Frontend deployment platform" },
+          { name: "Java",          icon: "openjdk",          description: "OOP and DSA projects" },
+          { name: "YOLO",          icon: "opencv",           description: "Real-time object detection" }
+        ];
+
+        listEl.innerHTML = skills.map(s => `
+          <li><a title="${s.description}" href="#"><img src="https://cdn.simpleicons.org/${s.icon}" width="35" height="35" alt="${s.name}" onerror="this.style.display='none'" /></a></li>
+        `).join('');
+
         try {
-          const response = await fetch('http://localhost:8000/api/skills/');
-          const skills = await response.json();
-          
-          if (skills.length > 0) {
-            listEl.innerHTML = skills.map(s => `
-              <li><a title="${s.description}" href="#"><img src="https://cdn.simpleicons.org/${s.icon}" width="35" height="35" alt="${s.name}" /></a></li>
-            `).join('');
-            
-            TagCanvas.Start('icon-cloud-canvas', 'icon-list', {
-              textColour: '#8b5cf6',
-              outlineColour: 'transparent',
-              reverse: true,
-              depth: 0.8,
-              maxSpeed: 0.05,
-              minSpeed: 0.01,
-              initial: [0.1, -0.1],
-              wheelZoom: false,
-              imageScale: 1.5,
-              fadeIn: 1000,
-              clickToFront: 600,
-              lock: 'none',
-              imagePosition: 'top',
-              tooltip: 'div',
-              tooltipClass: 'advanced-tooltip',
-              tooltipDelay: 0
-            });
-          }
+          TagCanvas.Start('icon-cloud-canvas', 'icon-list', {
+            textColour: '#8b5cf6',
+            outlineColour: 'transparent',
+            reverse: true,
+            depth: 0.8,
+            maxSpeed: 0.05,
+            minSpeed: 0.01,
+            initial: [0.1, -0.1],
+            wheelZoom: false,
+            imageScale: 1.5,
+            fadeIn: 1000,
+            clickToFront: 600,
+            lock: 'none',
+            imagePosition: 'top',
+            tooltip: 'div',
+            tooltipClass: 'advanced-tooltip',
+            tooltipDelay: 0
+          });
         } catch(e) {
-          console.error('Canvas icon cloud API failed:', e);
+          console.error('TagCanvas failed to start:', e);
         }
       };
       initSkillCloud();
