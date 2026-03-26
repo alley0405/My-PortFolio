@@ -866,6 +866,156 @@
       </div>
     </div>
 
+    <!-- ==================== CONTACT ME SECTION ==================== -->
+    <section id="contact-section" class="section-padding fade-in-up" style="position: relative;">
+
+      <!-- Section Label -->
+      <div class="text-center mb-16">
+        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-5"
+          style="background: rgba(139,92,246,0.1); border: 1px solid rgba(139,92,246,0.25); color: var(--primary); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; display:inline-flex;">
+          ✉ Get In Touch
+        </div>
+        <h2 class="hero-text text-gradient">Let's Connect</h2>
+        <p class="text-muted max-w-xl mx-auto" style="margin-top: 1rem; font-size: 1.1rem;">
+          Book an appointment or send me a message to discuss your next big project.
+        </p>
+      </div>
+
+      <!-- Contact cards + Form grid -->
+      <div style="max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1.5fr; gap: 3rem; align-items: start;">
+
+        <!-- LEFT — Info Cards -->
+        <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+
+          <div class="glass" style="padding: 1.5rem; border-radius: 20px; display: flex; align-items: center; gap: 1rem;">
+            <div style="width: 48px; height: 48px; border-radius: 14px; background: rgba(139,92,246,0.15); border: 1px solid rgba(139,92,246,0.25); display: flex; align-items: center; justify-content: center; color: var(--primary); flex-shrink: 0;">
+              <i data-lucide="mail" style="width:20px;height:20px;"></i>
+            </div>
+            <div>
+              <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 2px;">Email</div>
+              <div style="font-weight: 600; color: var(--text-main); font-size: 0.95rem;">yuvrajsingh@example.com</div>
+            </div>
+          </div>
+
+          <div class="glass" style="padding: 1.5rem; border-radius: 20px; display: flex; align-items: center; gap: 1rem;">
+            <div style="width: 48px; height: 48px; border-radius: 14px; background: rgba(6,182,212,0.12); border: 1px solid rgba(6,182,212,0.25); display: flex; align-items: center; justify-content: center; color: var(--secondary); flex-shrink: 0;">
+              <i data-lucide="map-pin" style="width:20px;height:20px;"></i>
+            </div>
+            <div>
+              <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 2px;">Location</div>
+              <div style="font-weight: 600; color: var(--text-main); font-size: 0.95rem;">India · Available Remotely</div>
+            </div>
+          </div>
+
+          <div class="glass" style="padding: 1.5rem; border-radius: 20px; display: flex; align-items: center; gap: 1rem;">
+            <div style="width: 48px; height: 48px; border-radius: 14px; background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.25); display: flex; align-items: center; justify-content: center; color: #10b981; flex-shrink: 0;">
+              <i data-lucide="clock" style="width:20px;height:20px;"></i>
+            </div>
+            <div>
+              <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 2px;">Availability</div>
+              <div style="font-weight: 600; color: var(--text-main); font-size: 0.95rem;">Open for Projects · Full-Time</div>
+            </div>
+          </div>
+
+          <!-- Social Links -->
+          <div class="glass" style="padding: 1.5rem; border-radius: 20px;">
+            <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 1rem;">Find Me On</div>
+            <div style="display: flex; gap: 0.75rem;">
+              <a href="https://github.com/" target="_blank" style="width: 42px; height: 42px; border-radius: 12px; background: rgba(139,92,246,0.1); border: 1px solid rgba(139,92,246,0.2); display: flex; align-items: center; justify-content: center; color: var(--primary); transition: all 0.2s;" onmouseover="this.style.background='rgba(139,92,246,0.25)'" onmouseout="this.style.background='rgba(139,92,246,0.1)'">
+                <i data-lucide="github" style="width:18px;height:18px;"></i>
+              </a>
+              <a href="https://linkedin.com/" target="_blank" style="width: 42px; height: 42px; border-radius: 12px; background: rgba(6,182,212,0.1); border: 1px solid rgba(6,182,212,0.2); display: flex; align-items: center; justify-content: center; color: var(--secondary); transition: all 0.2s;" onmouseover="this.style.background='rgba(6,182,212,0.25)'" onmouseout="this.style.background='rgba(6,182,212,0.1)'">
+                <i data-lucide="linkedin" style="width:18px;height:18px;"></i>
+              </a>
+              <a href="contact.html" style="width: 42px; height: 42px; border-radius: 12px; background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.2); display: flex; align-items: center; justify-content: center; color: #10b981; transition: all 0.2s;" onmouseover="this.style.background='rgba(16,185,129,0.25)'" onmouseout="this.style.background='rgba(16,185,129,0.1)'" title="Full Contact Page">
+                <i data-lucide="external-link" style="width:18px;height:18px;"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT — Contact Form -->
+        <div class="glass" style="padding: 2.5rem; border-radius: 24px;">
+          <form id="home-contact-form" onsubmit="submitHomeContact(event)">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 1.25rem;">
+              <div>
+                <label style="display:block; font-size:0.85rem; font-weight:600; color:var(--text-main); margin-bottom:0.5rem;">Full Name</label>
+                <input type="text" id="home-name" placeholder="John Doe" required
+                  style="width:100%; padding:0.9rem 1rem; background:rgba(15,23,42,0.6); border:1px solid var(--glass-border); border-radius:12px; color:var(--text-main); font-family:inherit; font-size:0.95rem; transition:border-color 0.2s, box-shadow 0.2s; box-sizing:border-box;"
+                  onfocus="this.style.borderColor='var(--primary)';this.style.boxShadow='0 0 15px var(--primary-glow)'"
+                  onblur="this.style.borderColor='';this.style.boxShadow=''">
+              </div>
+              <div>
+                <label style="display:block; font-size:0.85rem; font-weight:600; color:var(--text-main); margin-bottom:0.5rem;">Email Address</label>
+                <input type="email" id="home-email" placeholder="john@example.com" required
+                  style="width:100%; padding:0.9rem 1rem; background:rgba(15,23,42,0.6); border:1px solid var(--glass-border); border-radius:12px; color:var(--text-main); font-family:inherit; font-size:0.95rem; transition:border-color 0.2s, box-shadow 0.2s; box-sizing:border-box;"
+                  onfocus="this.style.borderColor='var(--primary)';this.style.boxShadow='0 0 15px var(--primary-glow)'"
+                  onblur="this.style.borderColor='';this.style.boxShadow=''">
+              </div>
+            </div>
+
+            <div style="margin-bottom: 1.25rem;">
+              <label style="display:block; font-size:0.85rem; font-weight:600; color:var(--text-main); margin-bottom:0.5rem;">Subject</label>
+              <input type="text" id="home-subject" placeholder="Project Inquiry / Collaboration" required
+                style="width:100%; padding:0.9rem 1rem; background:rgba(15,23,42,0.6); border:1px solid var(--glass-border); border-radius:12px; color:var(--text-main); font-family:inherit; font-size:0.95rem; transition:border-color 0.2s, box-shadow 0.2s; box-sizing:border-box;"
+                onfocus="this.style.borderColor='var(--primary)';this.style.boxShadow='0 0 15px var(--primary-glow)'"
+                onblur="this.style.borderColor='';this.style.boxShadow=''">
+            </div>
+
+            <div style="margin-bottom: 2rem;">
+              <label style="display:block; font-size:0.85rem; font-weight:600; color:var(--text-main); margin-bottom:0.5rem;">Message</label>
+              <textarea id="home-message" rows="5" placeholder="Tell me about your project..." required
+                style="width:100%; padding:0.9rem 1rem; background:rgba(15,23,42,0.6); border:1px solid var(--glass-border); border-radius:12px; color:var(--text-main); font-family:inherit; font-size:0.95rem; resize:vertical; transition:border-color 0.2s, box-shadow 0.2s; box-sizing:border-box;"
+                onfocus="this.style.borderColor='var(--primary)';this.style.boxShadow='0 0 15px var(--primary-glow)'"
+                onblur="this.style.borderColor='';this.style.boxShadow=''"></textarea>
+            </div>
+
+            <button type="submit" id="home-submit-btn" class="btn-premium" style="width:100%; border-radius:14px; padding:1rem; font-size:1rem; display:flex; align-items:center; justify-content:center; gap:0.5rem;">
+              <i data-lucide="send" style="width:18px;height:18px;"></i>
+              Send Message
+            </button>
+
+            <div id="home-success-msg" style="display:none; text-align:center; margin-top:1.5rem; padding:1rem; border-radius:12px; background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.3); color:#10b981; font-weight:600;">
+              ✓ Message sent! I'll get back to you soon.
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <style>
+        @media (max-width: 768px) {
+          #contact-section > div:last-of-type > div:first-child,
+          #contact-section [style*="grid-template-columns: 1fr 1.5fr"] {
+            grid-template-columns: 1fr !important;
+          }
+        }
+      </style>
+
+      <script>
+        function submitHomeContact(event) {
+          event.preventDefault();
+          const name    = document.getElementById('home-name').value;
+          const email   = document.getElementById('home-email').value;
+          const subject = document.getElementById('home-subject').value;
+          const message = document.getElementById('home-message').value;
+          const btn     = document.getElementById('home-submit-btn');
+
+          btn.innerHTML = '<svg class="animate-spin" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Sending...';
+          btn.disabled = true;
+
+          // mailto fallback — works without any backend
+          const mailtoLink = `mailto:yuvrajsingh@example.com?subject=${encodeURIComponent(subject + ' — from ' + name)}&body=${encodeURIComponent('Name: ' + name + '\nEmail: ' + email + '\n\n' + message)}`;
+
+          setTimeout(() => {
+            window.location.href = mailtoLink;
+            document.getElementById('home-contact-form').style.display = 'none';
+            document.getElementById('home-success-msg').style.display = 'block';
+            btn.disabled = false;
+          }, 800);
+        }
+      </script>
+    </section>
+
   </main>
 
   <!-- SCRIPTS -->
