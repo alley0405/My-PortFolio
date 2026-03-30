@@ -20,6 +20,10 @@ from rest_framework.routers import DefaultRouter
 from contact_form.views import ContactSubmitView
 from portfolio_core.views import AchievementViewSet, ProjectViewSet, SkillViewSet
 
+from django.views.generic import TemplateView
+from django.conf import settings
+from django.conf.urls.static import static
+
 router = DefaultRouter()
 router.register(r'achievements', AchievementViewSet)
 router.register(r'projects', ProjectViewSet)
@@ -29,4 +33,12 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
     path('api/contact/', ContactSubmitView.as_view(), name='contact-submit'),
+    path('', TemplateView.as_view(template_name='index.html'), name='home'),
+    path('projects.html', TemplateView.as_view(template_name='projects.html'), name='projects'),
+    path('contact.html', TemplateView.as_view(template_name='contact.html'), name='contact'),
+    path('achievements.html', TemplateView.as_view(template_name='achievements.html'), name='achievements'),
 ]
+
+# Serve static files from root during development
+if settings.DEBUG:
+    urlpatterns += static('/', document_root=settings.BASE_DIR)

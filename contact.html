@@ -127,23 +127,23 @@
         <form action="#" method="POST" onsubmit="submitForm(event)">
           <div class="form-group">
             <label class="form-label" for="name">Full Name</label>
-            <input type="text" id="name" class="form-control" placeholder="John Doe" required>
+            <input type="text" id="name" name="name" class="form-control" placeholder="John Doe" required>
           </div>
           <div class="form-group">
             <label class="form-label" for="email">Email Address</label>
-            <input type="email" id="email" class="form-control" placeholder="john@example.com" required>
+            <input type="email" id="email" name="email" class="form-control" placeholder="john@example.com" required>
           </div>
           <div class="form-group">
             <label class="form-label" for="date">Appointment Date</label>
-            <input type="date" id="date" class="form-control" required>
+            <input type="date" id="date" name="date" class="form-control" required>
           </div>
           <div class="form-group">
             <label class="form-label" for="time">Preferred Time</label>
-            <input type="time" id="time" class="form-control" required>
+            <input type="time" id="time" name="time" class="form-control" required>
           </div>
           <div class="form-group" style="margin-bottom: 2rem;">
             <label class="form-label" for="message">Project Details</label>
-            <textarea id="message" class="form-control" rows="4" placeholder="Tell me about your project..." required></textarea>
+            <textarea id="message" name="project_details" class="form-control" rows="4" placeholder="Tell me about your project..." required></textarea>
           </div>
           <button type="submit" class="btn-premium" style="width: 100%; border-radius: 12px;">Submit Request</button>
         </form>
